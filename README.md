@@ -11,11 +11,11 @@ SNUS: Social, Navigable, User friendly, Scalable.
 | Name | Role |
 |------|------|
 | Kowshick Ahmed Abir | Project Lead |
-| Tariqul Islam | UX / IA Designer |
+| Tariqul Islam | UX/IA Designer |
 | Asan Limbu | UX Research Lead |
-| Dip Mondal | UI / Prototype Designer |
+| Dip Mondal | UI/Prototype Designer |
 | Bushra Rimi | Documentation Lead |
-| Anita Rahman | Technical / Feasibility Lead |
+| Anita Rahman | Technical/Feasibility Lead |
 
 Module leader: Dr Aruna Duraisingam.
 
