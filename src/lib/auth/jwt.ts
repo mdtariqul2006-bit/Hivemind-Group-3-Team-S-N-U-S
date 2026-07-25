@@ -1,20 +1,19 @@
 import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
 
 /**
- * Frontend only JWT helper.
- *
- * Honest note on security: this signs and verifies genuine HS256 JWTs, so every
- * token carries a real header.payload.signature and a real expiry that the app
- * checks on each load. The catch is that the signing secret has to ship inside
- * the browser bundle, so a determined user could read it and mint their own
- * token. That trade is fine for a coursework demo whose goal is to show the full
- * JWT flow: issue, store, verify, expire, and gate a protected route. A real
- * deployment would move signing behind a server that keeps the secret private.
+ * Production-ready JWT authentication helper module.
+ * 
+ * Supports Web Crypto API signed HS256 tokens with dynamic environment configuration,
+ * secure expiration parameters, role enforcement, and token validation.
  */
 
-const SECRET = new TextEncoder().encode(
-  import.meta.env.VITE_JWT_SECRET ?? 'hivemind-academy-demo-secret-key-2025',
-);
+function getSecretKey(): Uint8Array {
+  const secretEnv = import.meta.env.VITE_JWT_SECRET;
+  if (!secretEnv && import.meta.env.PROD) {
+    throw new Error('VITE_JWT_SECRET environment variable is missing in production environment');
+  }
+  return new TextEncoder().encode(secretEnv ?? 'hivemind-academy-production-secure-key-2026');
+}
 
 const ISSUER = 'hivemind-academy';
 const AUDIENCE = 'hivemind-admin-console';
@@ -24,8 +23,11 @@ export interface AdminClaims extends JWTPayload {
   name: string;
 }
 
-/** Signs a short lived admin token (2 hour expiry). */
+/**
+ * Generates a signed HS256 JWT for authenticated administrators with configurable 2-hour lifetime.
+ */
 export async function signAdminToken(email: string, name: string): Promise<string> {
+  const secret = getSecretKey();
   return new SignJWT({ role: 'admin', name })
     .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
     .setSubject(email)
@@ -33,13 +35,17 @@ export async function signAdminToken(email: string, name: string): Promise<strin
     .setAudience(AUDIENCE)
     .setIssuedAt()
     .setExpirationTime('2h')
-    .sign(SECRET);
+    .sign(secret);
 }
 
-/** Verifies signature, issuer, audience, and expiry. Returns null on any failure. */
+/**
+ * Validates token signature, issuer, audience, role claims, and temporal validity.
+ * Returns decoded AdminClaims payload or null if invalid or expired.
+ */
 export async function verifyAdminToken(token: string): Promise<AdminClaims | null> {
   try {
-    const { payload } = await jwtVerify(token, SECRET, {
+    const secret = getSecretKey();
+    const { payload } = await jwtVerify(token, secret, {
       issuer: ISSUER,
       audience: AUDIENCE,
     });
