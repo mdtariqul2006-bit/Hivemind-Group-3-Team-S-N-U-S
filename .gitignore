@@ -84,7 +84,11 @@ dist-ssr/
 # AI agent configurations and documentation (internal context)
 .claude/
 CLAUDE.md
+claude.md
 ANTIGRAVITY.md
+antigravity.md
+agy.md
+AGY.md
 .gemini/
 .agents/
 AGENT_LOCKS.md
