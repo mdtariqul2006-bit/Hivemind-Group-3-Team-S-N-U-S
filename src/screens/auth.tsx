@@ -9,8 +9,8 @@ import { cn } from '@/lib/cn';
 type Tab = 'sign-in' | 'sign-up';
 
 export function Auth() {
-  const { signIn, signUp } = useMember();
-  const { dispatch } = useOnboarding();
+  const { user, signIn, signUp } = useMember();
+  const { state, dispatch } = useOnboarding();
   const [tab, setTab] = useState<Tab>('sign-in');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -28,13 +28,22 @@ export function Auth() {
       setError(result.error);
       return;
     }
-    dispatch({ type: 'go', view: 'dashboard' });
+    // Picking a team is part of setting up the account now, not a separate
+    // step people can skip into a blank dashboard. Anyone who already has a
+    // role this session (an existing member signing back in) skips straight
+    // to their dashboard instead.
+    dispatch({ type: 'go', view: state.role ? 'dashboard' : 'personalise' });
   }
 
   return (
     <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col justify-center px-5 py-12">
       <button
-        onClick={() => dispatch({ type: 'go', view: 'landing' })}
+        onClick={() =>
+          dispatch({
+            type: 'go',
+            view: !user ? 'landing' : state.role ? 'dashboard' : 'personalise',
+          })
+        }
         className="mx-auto mb-10"
         aria-label="HiveMind home"
       >

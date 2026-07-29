@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Compass, HeartHandshake, TrendingUp } from 'lucide-react';
 import { useOnboarding } from '@/state/onboarding-context';
+import { useMember } from '@/state/member-context';
 import { Button } from '@/components/ui/button';
 import { Reveal, RevealGroup } from '@/components/motion/reveal';
 import { HexFrame } from '@/components/ui/hex-frame';
@@ -35,6 +36,7 @@ const PROMISES = [
 
 export function Landing() {
   const { state, dispatch } = useOnboarding();
+  const { user: member } = useMember();
 
   // Dashboard has nothing to show without a role, send an unpersonalised
   // visitor to the wizard first instead of a blank-looking "complete" screen.
@@ -42,11 +44,23 @@ export function Landing() {
     dispatch({ type: 'go', view: state.role ? 'dashboard' : 'personalise' });
   }
 
+  // Logo click is a plain "go home" for an anonymous visitor. A signed-in
+  // member gets taken straight to their own dashboard instead (or the wizard,
+  // if they somehow have not picked a role yet).
+  function goHome() {
+    if (!member) {
+      dispatch({ type: 'go', view: 'landing' });
+      return;
+    }
+    goToDashboard();
+  }
+
   return (
     <div className="relative w-full overflow-x-hidden">
       {/* Immersive Shader Showcase Hero */}
       <div className="p-4 md:p-6 lg:p-8">
         <ShaderShowcase
+          onLogoClick={goHome}
           onStartClick={() => dispatch({ type: 'go', view: 'personalise' })}
           onDashboardClick={goToDashboard}
           onAdminClick={() => dispatch({ type: 'go', view: 'admin' })}

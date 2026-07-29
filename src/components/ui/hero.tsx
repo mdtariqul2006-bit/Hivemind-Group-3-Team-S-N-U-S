@@ -8,13 +8,14 @@ import { Wordmark } from "@/components/ui/logo"
 import { ArrowRight, LogIn, ShieldCheck } from "lucide-react"
 
 interface ShaderShowcaseProps {
+  onLogoClick?: () => void
   onStartClick?: () => void
   onDashboardClick?: () => void
   onAdminClick?: () => void
   onSignInClick?: () => void
 }
 
-export default function ShaderShowcase({ onStartClick, onDashboardClick, onAdminClick, onSignInClick }: ShaderShowcaseProps) {
+export default function ShaderShowcase({ onLogoClick, onStartClick, onDashboardClick, onAdminClick, onSignInClick }: ShaderShowcaseProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const { theme } = useTheme()
   const { user: member } = useMember()
@@ -64,13 +65,16 @@ export default function ShaderShowcase({ onStartClick, onDashboardClick, onAdmin
       {/* Hero Content Overlay */}
       <div className="relative z-10 flex flex-col justify-between min-h-[90vh] p-6 sm:p-10 lg:p-14">
         <header className="flex items-center justify-between w-full">
-          <motion.div
+          <motion.button
+            type="button"
+            onClick={onLogoClick}
+            aria-label="HiveMind home"
             className="flex items-center group cursor-pointer"
             whileHover={{ scale: 1.03 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
             <Wordmark size={40} />
-          </motion.div>
+          </motion.button>
 
           <div className="flex items-center gap-2.5">
             {!member && onSignInClick && (

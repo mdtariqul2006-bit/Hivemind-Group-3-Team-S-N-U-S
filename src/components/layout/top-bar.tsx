@@ -45,7 +45,12 @@ export function TopBar({ title }: { title?: string }) {
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-5">
         <div className="flex min-w-0 items-center gap-3">
           <button
-            onClick={() => dispatch({ type: 'go', view: state.role ? 'dashboard' : 'landing' })}
+            onClick={() =>
+              dispatch({
+                type: 'go',
+                view: !user ? 'landing' : state.role ? 'dashboard' : 'personalise',
+              })
+            }
             className="flex shrink-0 items-center gap-2.5 rounded-full"
             aria-label="HiveMind home"
           >
