@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { FileText, Users } from 'lucide-react';
+import { FileText, Users, ShieldCheck } from 'lucide-react';
 import { NEW_HIRE } from '@/data/roles';
 import { useOnboarding } from '@/state/onboarding-context';
 import type { View } from '@/types';
@@ -9,8 +9,10 @@ import { ThemeToggle } from './theme-toggle';
 import { cn } from '@/lib/cn';
 
 const NAV: { view: View; label: string; icon: typeof Users }[] = [
+  { view: 'dashboard', label: 'Dashboard', icon: Users },
   { view: 'people', label: 'People', icon: Users },
   { view: 'documents', label: 'Documents', icon: FileText },
+  { view: 'admin', label: 'Admin', icon: ShieldCheck },
 ];
 
 /**
@@ -30,23 +32,22 @@ export function TopBar({ title }: { title?: string }) {
       className="sticky top-0 z-40 border-b border-border/70 frosted"
     >
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-5">
-        <button
-          onClick={() => dispatch({ type: 'go', view: state.role ? 'dashboard' : 'landing' })}
-          className="rounded-full"
-          aria-label="HiveMind home"
-        >
-          <Wordmark />
-        </button>
-
-        {title && (
-          <span
-            className={cn(
-              'absolute left-1/2 hidden -translate-x-1/2 text-sm font-medium text-muted lg:block',
-            )}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => dispatch({ type: 'go', view: state.role ? 'dashboard' : 'landing' })}
+            className="rounded-full flex items-center gap-2.5"
+            aria-label="HiveMind home"
           >
-            {title}
-          </span>
-        )}
+            <Wordmark />
+          </button>
+
+          {title && (
+            <div className="hidden sm:flex items-center gap-2">
+              <span className="text-border">/</span>
+              <span className="text-xs font-semibold text-muted">{title}</span>
+            </div>
+          )}
+        </div>
 
         <div className="flex items-center gap-1.5">
           <nav className="mr-1.5 hidden items-center gap-1 sm:flex" aria-label="Quick links">
