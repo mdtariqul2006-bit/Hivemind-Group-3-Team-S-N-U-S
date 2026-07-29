@@ -1,6 +1,4 @@
 import { Reveal } from '@/components/motion/reveal';
-import { IconPanel } from '@/components/ui/icon-panel';
-import { RESEARCH_ICONS } from '@/lib/research-icons';
 import { HIVEMIND_RESEARCH } from '@/library';
 
 const { mission } = HIVEMIND_RESEARCH;
@@ -34,13 +32,14 @@ export function MissionBand() {
           </Reveal>
 
           <Reveal delay={0.08}>
-            <IconPanel
-              icon={RESEARCH_ICONS[mission.icon]}
-              accent={mission.accent}
-              pattern
-              iconSize={80}
-              className="aspect-[4/3] w-full rounded-3xl border border-border shadow-[var(--shadow-soft)]"
-            />
+            <div className="relative overflow-hidden rounded-3xl border border-border shadow-[var(--shadow-soft)]">
+              <img
+                src={mission.image}
+                alt="A team working through a shared learning structure together"
+                loading="lazy"
+                className="aspect-[4/3] w-full object-cover"
+              />
+            </div>
           </Reveal>
         </div>
       </div>

@@ -1,19 +1,21 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { FileText, Users, ShieldCheck } from 'lucide-react';
+import { FileText, LogOut, Users, ShieldCheck } from 'lucide-react';
 import { NEW_HIRE } from '@/data/roles';
 import { useOnboarding } from '@/state/onboarding-context';
+import { useAuth } from '@/state/auth-context';
 import type { View } from '@/types';
 import { Avatar } from '@/components/ui/avatar';
 import { Wordmark } from '@/components/ui/logo';
 import { ThemeToggle } from './theme-toggle';
 import { cn } from '@/lib/cn';
 
-const NAV: { view: View; label: string; icon: typeof Users }[] = [
+const BASE_NAV: { view: View; label: string; icon: typeof Users }[] = [
   { view: 'dashboard', label: 'Dashboard', icon: Users },
   { view: 'people', label: 'People', icon: Users },
   { view: 'documents', label: 'Documents', icon: FileText },
-  { view: 'admin', label: 'Admin', icon: ShieldCheck },
 ];
+
+const ADMIN_NAV_ITEM = { view: 'admin' as const, label: 'Admin', icon: ShieldCheck };
 
 /**
  * Persistent frosted top bar: logo mark, contextual page title, theme toggle and
@@ -23,6 +25,14 @@ const NAV: { view: View; label: string; icon: typeof Users }[] = [
 export function TopBar({ title }: { title?: string }) {
   const reduce = useReducedMotion();
   const { state, dispatch } = useOnboarding();
+  const { user, signOut } = useAuth();
+
+  const nav = user?.role === 'admin' ? [...BASE_NAV, ADMIN_NAV_ITEM] : BASE_NAV;
+
+  function handleSignOut() {
+    signOut();
+    dispatch({ type: 'go', view: 'landing' });
+  }
 
   return (
     <motion.header
@@ -51,7 +61,7 @@ export function TopBar({ title }: { title?: string }) {
 
         <div className="flex items-center gap-1.5">
           <nav className="mr-1.5 hidden items-center gap-1 sm:flex" aria-label="Quick links">
-            {NAV.map((n) => (
+            {nav.map((n) => (
               <button
                 key={n.view}
                 onClick={() => dispatch({ type: 'go', view: n.view })}
@@ -66,6 +76,17 @@ export function TopBar({ title }: { title?: string }) {
             ))}
           </nav>
           <ThemeToggle />
+          {user && (
+            <button
+              onClick={handleSignOut}
+              className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-sunk hover:text-ink"
+              aria-label="Sign out"
+              title={`Signed in as ${user.email}`}
+            >
+              <LogOut className="h-4 w-4" />
+              <span className="hidden lg:inline">Sign out</span>
+            </button>
+          )}
           <Avatar initials="AL" accent="honey" size={38} presence="online" />
           <span className="sr-only">{NEW_HIRE}</span>
         </div>

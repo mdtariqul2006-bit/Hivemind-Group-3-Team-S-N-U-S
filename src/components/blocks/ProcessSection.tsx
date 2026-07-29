@@ -1,11 +1,11 @@
 import { Reveal } from '@/components/motion/reveal';
 import { HexFrame } from '@/components/ui/hex-frame';
-import { IconPanel } from '@/components/ui/icon-panel';
-import { RESEARCH_ICONS } from '@/lib/research-icons';
 import { cn } from '@/lib/cn';
 import { HIVEMIND_RESEARCH } from '@/library';
 
 const { processSteps } = HIVEMIND_RESEARCH;
+
+const ACCENTS = ['honey', 'pink', 'sage'] as const;
 
 /** Drops the "Step 1: " prefix so the number can carry its own visual weight. */
 function stripStepPrefix(title: string): string {
@@ -43,7 +43,7 @@ export function ProcessSection() {
                   <div className="grid items-center gap-8 lg:grid-cols-2">
                     <div className={cn(flipped && 'lg:order-2')}>
                       <div className="flex items-center gap-4">
-                        <HexFrame accent={step.accent} size={52}>
+                        <HexFrame accent={ACCENTS[i % ACCENTS.length]} size={52}>
                           <span className="text-lg font-black text-charcoal numeral">
                             {step.step}
                           </span>
@@ -58,13 +58,15 @@ export function ProcessSection() {
                     </div>
 
                     <div className={cn(flipped && 'lg:order-1')}>
-                      <IconPanel
-                        icon={RESEARCH_ICONS[step.icon]}
-                        accent={step.accent}
-                        pattern
-                        iconSize={72}
-                        className="aspect-[4/3] w-full rounded-3xl border border-border shadow-[var(--shadow-soft)]"
-                      />
+                      <div className="overflow-hidden rounded-3xl border border-border shadow-[var(--shadow-soft)]">
+                        <img
+                          src={step.image}
+                          alt=""
+                          aria-hidden
+                          loading="lazy"
+                          className="aspect-[4/3] w-full object-cover"
+                        />
+                      </div>
                     </div>
                   </div>
                 </Reveal>

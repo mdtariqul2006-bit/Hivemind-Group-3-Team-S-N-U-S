@@ -44,6 +44,7 @@ export function Landing() {
           onStartClick={() => dispatch({ type: 'go', view: 'personalise' })}
           onDashboardClick={() => dispatch({ type: 'go', view: 'dashboard' })}
           onAdminClick={() => dispatch({ type: 'go', view: 'admin' })}
+          onSignInClick={() => dispatch({ type: 'go', view: 'auth' })}
         />
       </div>
 

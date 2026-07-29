@@ -1,8 +1,6 @@
 import { motion } from 'framer-motion';
 import { Reveal, RevealGroup, RevealItem } from '@/components/motion/reveal';
 import { GlowCard } from '@/components/motion/glow-card';
-import { IconPanel } from '@/components/ui/icon-panel';
-import { RESEARCH_ICONS } from '@/lib/research-icons';
 import { HIVEMIND_RESEARCH } from '@/library';
 
 const { valuePropositions } = HIVEMIND_RESEARCH;
@@ -37,10 +35,12 @@ export function PillarsSection() {
                 className="h-full"
               >
                 <GlowCard className="flex h-full flex-col overflow-hidden">
-                  <IconPanel
-                    icon={RESEARCH_ICONS[pillar.icon]}
-                    accent={pillar.accent}
-                    className="aspect-[16/9] w-full"
+                  <img
+                    src={pillar.image}
+                    alt=""
+                    aria-hidden
+                    loading="lazy"
+                    className="aspect-[16/9] w-full object-cover"
                   />
                   <div className="flex flex-1 flex-col p-7">
                     <span className="text-xs font-bold tracking-widest text-honey-deep numeral">

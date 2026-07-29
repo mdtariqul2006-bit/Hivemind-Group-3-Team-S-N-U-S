@@ -3,19 +3,22 @@ import { useEffect, useRef, useState } from "react"
 import { MeshGradient, PulsingBorder } from "@paper-design/shaders-react"
 import { motion, useReducedMotion } from "framer-motion"
 import { useTheme } from "@/hooks/use-theme"
-import { LogoMark } from "@/components/ui/logo"
+import { useAuth } from "@/state/auth-context"
+import { Wordmark } from "@/components/ui/logo"
 import { ArrowRight } from "lucide-react"
 
 interface ShaderShowcaseProps {
   onStartClick?: () => void
   onDashboardClick?: () => void
   onAdminClick?: () => void
+  onSignInClick?: () => void
 }
 
-export default function ShaderShowcase({ onStartClick, onDashboardClick, onAdminClick }: ShaderShowcaseProps) {
+export default function ShaderShowcase({ onStartClick, onDashboardClick, onAdminClick, onSignInClick }: ShaderShowcaseProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [, setIsActive] = useState(false)
   const { theme } = useTheme()
+  const { user } = useAuth()
   const reduce = useReducedMotion()
 
   useEffect(() => {
@@ -112,23 +115,29 @@ export default function ShaderShowcase({ onStartClick, onDashboardClick, onAdmin
       <div className="relative z-10 flex flex-col justify-between min-h-[90vh] p-6 sm:p-10 lg:p-14">
         <header className="flex items-center justify-between w-full">
           <motion.div
-            className="flex items-center group cursor-pointer gap-3"
+            className="flex items-center group cursor-pointer"
             whileHover={{ scale: 1.03 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
-            <div className="flex items-center gap-2">
-              <LogoMark size={32} />
-              <span className="text-xl font-extrabold tracking-tight text-ink">HiveMind</span>
-            </div>
+            <Wordmark size={40} />
           </motion.div>
 
           <div className="flex items-center gap-3">
-            {onAdminClick && (
+            {user?.role === "admin" && onAdminClick && (
               <button
                 onClick={onAdminClick}
                 className="px-4 py-2 rounded-full bg-surface/80 border border-border text-ink font-semibold text-xs transition-all duration-300 hover:bg-sunk cursor-pointer shadow-sm backdrop-blur-md flex items-center gap-1.5"
               >
                 <span>🛡️</span> Admin Panel
+              </button>
+            )}
+
+            {!user && onSignInClick && (
+              <button
+                onClick={onSignInClick}
+                className="px-4 py-2 rounded-full bg-surface/80 border border-border text-ink font-semibold text-xs transition-all duration-300 hover:bg-sunk cursor-pointer shadow-sm backdrop-blur-md"
+              >
+                Sign In
               </button>
             )}
 
