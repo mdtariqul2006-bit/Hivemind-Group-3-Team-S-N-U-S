@@ -96,6 +96,3 @@ transcript_full.jsonl
 *.tmp
 git_temp/
 git_temp_public/
-# Local developer secrets
-git/
-

@@ -151,7 +151,7 @@ export default function ShaderShowcase({ onStartClick, onDashboardClick }: Shade
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-honey opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-honey"></span>
                   </span>
-                  HiveMind × Ravensbourne Smart Onboarding
+                  Smart Onboarding
                 </span>
               </motion.div>
 

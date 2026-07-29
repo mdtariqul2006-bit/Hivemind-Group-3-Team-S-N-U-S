@@ -35,20 +35,20 @@
 }
 
 [data-theme='dark'] {
-  --hm-canvas: #22252a; /* warm near-black */
-  --hm-surface: #2c3037;
-  --hm-surface-sunk: #262a30;
-  --hm-ink: #f3f1ed;
-  --hm-muted: #a3a9b0;
-  --hm-border: #3a3f47;
+  --hm-canvas: #090b0e; /* Deep high-contrast midnight canvas */
+  --hm-surface: #14181f;
+  --hm-surface-sunk: #0f1217;
+  --hm-ink: #ffffff; /* Pure crisp white for text */
+  --hm-muted: #cbd5e1; /* High contrast light slate for body/labels */
+  --hm-border: #272e38;
 
-  --hm-honey-wash: #3a2c17;
-  --hm-pink-wash: #382a2c;
-  --hm-sage-wash: #2a3130;
-  --hm-honey-deep: #ffd294;
+  --hm-honey-wash: #2e2210;
+  --hm-pink-wash: #2e1e21;
+  --hm-sage-wash: #1b2624;
+  --hm-honey-deep: #ffc370;
 
-  --hm-scrim: rgb(16 18 21 / 0.62);
-  --hm-glass: rgb(44 48 55 / 0.72);
+  --hm-scrim: rgb(5 7 9 / 0.75);
+  --hm-glass: rgb(20 24 31 / 0.85);
 }
 
 @theme inline {

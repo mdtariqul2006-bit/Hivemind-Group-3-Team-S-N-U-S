@@ -76,7 +76,7 @@ export function Landing() {
                 transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                 className="h-full"
               >
-                <GlowCard className="h-full p-8 border border-border bg-surface/80 backdrop-blur-md">
+                <GlowCard className="h-full p-8 border border-border bg-surface">
                   <HexFrame accent={p.accent} size={52}>
                     <p.icon className="h-6 w-6 text-charcoal" strokeWidth={1.9} />
                   </HexFrame>
