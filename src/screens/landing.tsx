@@ -9,11 +9,11 @@ import { Section as RobotSection } from '@/components/ui/robot-demo';
 import { FloatingPaths } from '@/components/ui/background-paths';
 import { AnimatedGradient } from '@/components/ui/animated-gradient';
 import { GlowCard } from '@/components/motion/glow-card';
-import { MissionBand } from '@/components/blocks/mission-band';
-import { PillarsSection } from '@/components/blocks/pillars-section';
-import { ProcessSection } from '@/components/blocks/process-section';
-import { PrinciplesSection } from '@/components/blocks/principles-section';
-import { InsightsSection } from '@/components/blocks/insights-section';
+import { MissionBand } from '@/components/blocks/MissionBand';
+import { PillarsSection } from '@/components/blocks/PillarsSection';
+import { ProcessSection } from '@/components/blocks/ProcessSection';
+import { PrinciplesSection } from '@/components/blocks/PrinciplesSection';
+import { InsightsSection } from '@/components/blocks/InsightsSection';
 
 const PROMISES = [
   {
