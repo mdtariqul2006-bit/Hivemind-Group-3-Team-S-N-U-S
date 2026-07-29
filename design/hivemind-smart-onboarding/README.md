@@ -1,71 +1,67 @@
-# HiveMind Smart Onboarding Prototype
+# HiveMind: Smart Onboarding Prototype
 
-Smart Onboarding is a guided first 30 days experience built for new starters at HiveMind Academy. It converts traditional document heavy onboarding into an interactive, role-specific journey with real-time progress tracking, 1:1 buddy matching, and clear milestone management.
+Welcome to the guided sprint prototype for HiveMind. This project demonstrates a guided, personalized first 30 days experience for new hires at Northwind.
 
-This prototype was developed for the Work Based Learning module (PLP22206) at Ravensbourne University London in partnership with HiveMind Academy.
+## Product Thesis
 
-## Key Features
+New employees often experience an impersonal, document heavy onboarding process. Information is scattered, and there is little guidance on what to do first. 
 
-* **Guided Phase Roadmap**: Step by step tasks split across Day 1, Week 1, and Month 1.
-* **Role Personalisation**: Custom paths tailored for Software Engineers, Product Designers, and Growth Marketers.
-* **Interactive Progress Hive**: Real-time progress visualizer tracking completed onboarding milestones.
-* **Team and Support Access**: Direct contact details for designated buddies, managers, and support channels.
-* **Interactive Document Hub**: Searchable repository of essential policies, handbook notes, and guides.
-* **Accessible and Motion Aware**: Built-in support for reduced motion preferences and keyboard accessibility.
+HiveMind solves this with:
+1. **A Guided Roadmap**: Tasks organized by Day 1, Week 1, and Month 1.
+2. **Role Specific Content**: Custom paths tailored for Designers, Engineers, and Marketers.
+3. **Micro learning Cards**: Small, digestible cards instead of long handbooks.
+4. **Visually Clear Progress**: The ProgressHive component tracks progress cell by cell.
+5. **Support Channels**: Manager and buddy details are always accessible.
 
-## Tech Stack
+## Technical Architecture and Setup
 
-* **Framework**: React 19 + Vite 6
-* **Language**: TypeScript
-* **Styling**: Tailwind CSS v4
-* **Animation & Shaders**: Framer Motion, GSAP, Lenis Smooth Scroll, WebGL Mesh Shaders
-* **Icons**: Lucide React
+This project uses React, TypeScript, and Tailwind CSS. It is structured to replicate modern standards like shadcn.
 
-## Project Structure
+### Shadcn and Directory Structure
 
-```text
-src/
-├── components/
-│   ├── layout/       Top navigation bar, theme toggles, and shell elements
-│   ├── motion/       Particle canvas, 3D tilt cards, background shaders
-│   └── ui/           Reusable UI primitives (buttons, modals, progress hives)
-├── data/             Role templates, task databases, team contacts, and docs
-├── hooks/            Custom hooks for scroll, theme, and counter logic
-├── lib/              Utility functions, motion constants, and class merge helpers
-├── screens/          Primary app views (Landing, Personalise, Dashboard, People, Docs)
-├── state/            Global onboarding state context and toast notification manager
-├── styles/           Global CSS and Tailwind configuration
-└── types/            TypeScript definitions for tasks, roles, and view states
-```
+We use a standard component structure where reusable primitives reside in `src/components/ui/` (such as the Button, Badge, Skeleton, and Shader elements), and page screens reside in `src/screens/`.
 
-## Local Development Setup
+**Why the `/components/ui` folder is important:**
+- It separates layout components from design system primitives.
+- It enables shadcn CLI to easily add, update, and manage component code without conflicting with custom application logic.
+- It ensures a clean, predictable file hierarchy that external teams can immediately navigate.
 
-1. Clone the repository:
+### Setup Instructions from Scratch
+
+If you are initializing a new project to support this architecture:
+
+1. **Initialize TypeScript and Vite**:
    ```bash
-   git clone https://github.com/mdtariqul2006-bit/Hivemind-Group-3-Team-S-N-U-S.git
-   cd Hivemind-Group-3-Team-S-N-U-S
+   npm create vite@latest my-app -- --template react-ts
+   cd my-app
    ```
 
-2. Install dependencies:
+2. **Install Tailwind CSS**:
+   Follow Tailwind guidelines for Vite integration. For Tailwind v4:
    ```bash
-   npm install
+   npm install tailwindcss @tailwindcss/vite
+   ```
+   Add the Tailwind plugin to `vite.config.ts`.
+
+3. **Initialize Shadcn CLI**:
+   Run the CLI init command to set up component paths:
+   ```bash
+   npx shadcn@latest init
+   ```
+   During setup, choose the `/components/ui` path for component primitives and configure your import aliases (such as `@/*`).
+
+4. **Install Shader and Motion Dependencies**:
+   Install Framer Motion and Paper Design Shaders:
+   ```bash
+   npm install framer-motion @paper-design/shaders-react --legacy-peer-deps
    ```
 
-3. Start the local development server:
-   ```bash
-   npm run dev
-   ```
+## Motion and Interaction Design
 
-4. Build for production:
-   ```bash
-   npm run build
-   ```
+Our animations are crafted to feel premium, responsive, and natural.
 
-## Team Members (Group 3, Team SNUS)
-
-* **Kowshick Ahmed Abir**: Project Lead
-* **Tariqul Islam**: UX/IA Designer
-* **Asan Limbu**: UX Research Lead
-* **Dip Mondal**: UI/Prototype Designer
-* **Bushra Rimi**: Documentation Lead
-* **Anita Rahman**: Technical/Feasibility Lead
+1. **Shader Showcases**: The welcome screen uses a high performance WebGL `MeshGradient` and `PulsingBorder` to create an ambient, organic field.
+2. **Conic Border Glows**: Cards use the `GlowingEffect` to draw a subtle conic border gradient that tracks the user's cursor.
+3. **Drifting Gradients**: Behind content sections, slow moving color circles add depth.
+4. **Vector Path Waves**: The background features floating mathematical waves that animate slowly over time.
+5. **Reduced Motion**: We respect user preferences for reduced motion. All complex animations are disabled if `prefers-reduced-motion` is active.
