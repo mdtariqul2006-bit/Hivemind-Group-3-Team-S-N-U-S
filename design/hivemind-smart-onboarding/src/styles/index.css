@@ -1,0 +1,198 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter';
+
+/* Theme is driven by a data-attribute on <html> so it can be set before first
+   paint (see index.html) and toggled without a flash. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/* ---------------------------------------------------------------------------
+   Brand palette, HiveMind Academy's real identity.
+   HMA_Black #383C42 · HMA_Green #BAC9C5 · HMA_Yellow #FFC370 · HMA_Pink #F4B8BD
+   Every colour in the app comes from these variables. No magic hex in components.
+   --------------------------------------------------------------------------- */
+:root {
+  --hm-charcoal: #383c42; /* HMA_Black, primary text, dark surfaces */
+  --hm-sage: #bac9c5; /* HMA_Green, calm secondary, section bands */
+  --hm-honey: #ffc370; /* HMA_Yellow, primary accent, the "bee" colour */
+  --hm-pink: #f4b8bd; /* HMA_Pink, soft highlight, celebration states */
+
+  --hm-canvas: #fbfaf7; /* warm off-white page background */
+  --hm-surface: #ffffff; /* cards */
+  --hm-surface-sunk: #f5f3ee; /* inset wells, track backgrounds */
+  --hm-ink: #383c42; /* body text */
+  --hm-muted: #6b7178; /* secondary text */
+  --hm-border: #ece9e3; /* hairline borders */
+
+  /* Tints used where honey/pink need to sit behind text at AA contrast. */
+  --hm-honey-wash: #fff0db;
+  --hm-pink-wash: #fcedef;
+  --hm-sage-wash: #eef2f1;
+  /* Darkened honey for the rare case honey must carry text weight on light. */
+  --hm-honey-deep: #8a5000;
+
+  --hm-scrim: rgb(56 60 66 / 0.44);
+  --hm-glass: rgb(255 255 255 / 0.72);
+}
+
+[data-theme='dark'] {
+  --hm-canvas: #22252a; /* warm near-black */
+  --hm-surface: #2c3037;
+  --hm-surface-sunk: #262a30;
+  --hm-ink: #f3f1ed;
+  --hm-muted: #a3a9b0;
+  --hm-border: #3a3f47;
+
+  --hm-honey-wash: #3a2c17;
+  --hm-pink-wash: #382a2c;
+  --hm-sage-wash: #2a3130;
+  --hm-honey-deep: #ffd294;
+
+  --hm-scrim: rgb(16 18 21 / 0.62);
+  --hm-glass: rgb(44 48 55 / 0.72);
+}
+
+@theme inline {
+  --color-charcoal: var(--hm-charcoal);
+  --color-sage: var(--hm-sage);
+  --color-honey: var(--hm-honey);
+  --color-pink: var(--hm-pink);
+
+  --color-canvas: var(--hm-canvas);
+  --color-surface: var(--hm-surface);
+  --color-sunk: var(--hm-surface-sunk);
+  --color-ink: var(--hm-ink);
+  --color-muted: var(--hm-muted);
+  --color-border: var(--hm-border);
+
+  --color-honey-wash: var(--hm-honey-wash);
+  --color-pink-wash: var(--hm-pink-wash);
+  --color-sage-wash: var(--hm-sage-wash);
+  --color-honey-deep: var(--hm-honey-deep);
+  --color-glass: var(--hm-glass);
+  --color-scrim: var(--hm-scrim);
+
+  --font-sans: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', sans-serif;
+
+  /* Two-step elevation, never a flat border alone. */
+  --shadow-soft: 0 1px 2px rgb(56 60 66 / 0.06), 0 12px 32px -12px rgb(56 60 66 / 0.14);
+  --shadow-lift: 0 1px 2px rgb(56 60 66 / 0.08), 0 24px 48px -16px rgb(56 60 66 / 0.22);
+
+  /* The one entrance easing used everywhere. Springs are reserved for small
+     delightful moments and live in src/lib/motion.ts. */
+  --ease-hm: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    background-color: var(--hm-canvas);
+    color: var(--hm-ink);
+    font-family: var(--font-sans);
+    line-height: 1.65; /* generous body line-height */
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior-y: none;
+  }
+
+  h1,
+  h2,
+  h3 {
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Honey focus ring, always visible for keyboard users. */
+  :focus-visible {
+    outline: 2px solid var(--hm-honey);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: var(--hm-honey);
+    color: var(--hm-charcoal);
+  }
+}
+
+@utility gradient-hm {
+  background-image: linear-gradient(120deg, var(--hm-honey), var(--hm-pink));
+}
+
+/* Numbers (progress %, day counts) carry a touch more weight so they read as
+   milestones rather than as body copy. */
+@utility numeral {
+  font-variant-numeric: tabular-nums;
+  font-weight: 620;
+  letter-spacing: -0.03em;
+}
+
+@utility frosted {
+  background-color: var(--hm-glass);
+  backdrop-filter: blur(16px) saturate(1.5);
+  -webkit-backdrop-filter: blur(16px) saturate(1.5);
+}
+
+/* Horizontal task rows: real scroll-snap carousels on touch, tidy rows on
+   desktop. The scrollbar is hidden but the row stays keyboard-scrollable. */
+@utility rail {
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@keyframes hm-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes hm-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(2.5%, -3.5%, 0) scale(1.08);
+  }
+}
+
+@keyframes hm-drift-alt {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1.04);
+  }
+  50% {
+    transform: translate3d(-3%, 3%, 0) scale(0.94);
+  }
+}
+
+/* Every decorative animation is switched off wholesale for users who ask for
+   reduced motion, the app still reads and works identically, it just stops
+   moving. Component-level motion is gated in JS via useReducedMotion(). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="HiveMind Smart Onboarding: a guided, role-specific first 30 days that turns an overwhelming first week into a calm, visibly-progressing journey."
+    />
+    <meta name="theme-color" content="#FBFAF7" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 4 91 27v46L50 96 9 73V27z' fill='%23FFC370'/%3E%3C/svg%3E"
+    />
+    <title>HiveMind: Smart Onboarding</title>
+    <script>
+      // Set the theme before first paint so the app never flashes the wrong canvas.
+      (() => {
+        const stored = localStorage.getItem('hm-theme');
+        const theme =
+          stored ??
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
