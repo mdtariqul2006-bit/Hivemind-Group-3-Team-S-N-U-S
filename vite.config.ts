@@ -7,7 +7,11 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: { port: 5182, strictPort: true },
   resolve: {
-    alias: { '@': path.resolve(import.meta.dirname, './src') },
+    alias: {
+      '@': path.resolve(import.meta.dirname, './src'),
+      'react': path.resolve(import.meta.dirname, './node_modules/react'),
+      'react-dom': path.resolve(import.meta.dirname, './node_modules/react-dom'),
+    },
   },
   build: {
     // Keep the animation libraries in their own chunk so the landing screen's
