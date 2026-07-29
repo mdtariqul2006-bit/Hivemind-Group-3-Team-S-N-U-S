@@ -44,7 +44,7 @@ export default function ShaderShowcase({ onStartClick, onDashboardClick, onAdmin
   const borderColors = ["#FFC370", "#F4B8BD", "#BAC9C5", "#383C42", "#FFFFFF"]
 
   return (
-    <div ref={containerRef} className="relative min-h-[90vh] rounded-[2rem] border border-border bg-canvas/30 shadow-[var(--shadow-soft)]">
+    <div ref={containerRef} className="relative min-h-[90vh] overflow-hidden rounded-[2rem] border border-border bg-canvas/30 shadow-[var(--shadow-soft)]">
       {/* SVG Filters for glowing, gooey, and glass effects */}
       <svg className="absolute inset-0 w-0 h-0">
         <defs>
@@ -92,16 +92,16 @@ export default function ShaderShowcase({ onStartClick, onDashboardClick, onAdmin
         </defs>
       </svg>
 
-      {/* Mesh gradients clipped inside their own overflow-hidden wrapper */}
+      {/* Mesh gradients from paper-design shaders */}
       {!reduce && (
-        <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[2rem]">
+        <div className="absolute inset-0 w-full h-full pointer-events-none" style={{ transform: "translateZ(0)", willChange: "transform" }}>
           <MeshGradient
-            className="absolute inset-0 w-full h-full opacity-45"
+            className="absolute inset-0 w-full h-full opacity-20"
             colors={meshColors}
             speed={0.08}
           />
           <MeshGradient
-            className="absolute inset-0 w-full h-full opacity-20"
+            className="absolute inset-0 w-full h-full opacity-15"
             colors={["#000000", "#FFC370", "#F4B8BD", "#BAC9C5"]}
             speed={0.05}
           />
@@ -241,9 +241,9 @@ export default function ShaderShowcase({ onStartClick, onDashboardClick, onAdmin
             </div>
           </div>
 
-          {/* Interactive 3D Card Preview on Right: visible on tablet and up */}
+          {/* Interactive 3D Card Preview on Right */}
           <motion.div
-            className="hidden md:block lg:col-span-5 relative"
+            className="lg:col-span-5 relative"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
@@ -342,7 +342,7 @@ export default function ShaderShowcase({ onStartClick, onDashboardClick, onAdmin
               </defs>
               <text className="text-[7.5px] fill-ink/60 font-semibold tracking-wider uppercase">
                 <textPath href="#circle" startOffset="0%">
-                  HiveMind • Smart Onboarding • First 30 Days • Design Sprint •
+                  HiveMind • Smart Onboarding • Design Sprint • Hello World •
                 </textPath>
               </text>
             </motion.svg>

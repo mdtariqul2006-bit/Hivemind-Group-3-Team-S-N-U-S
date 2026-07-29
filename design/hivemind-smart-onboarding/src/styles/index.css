@@ -49,10 +49,6 @@
 
   --hm-scrim: rgb(5 7 9 / 0.75);
   --hm-glass: rgb(20 24 31 / 0.85);
-
-  /* Dark-mode shadows use pure black so elevation is visible on the dark canvas. */
-  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.30), 0 12px 32px -12px rgb(0 0 0 / 0.50);
-  --shadow-lift: 0 1px 2px rgb(0 0 0 / 0.40), 0 24px 48px -16px rgb(0 0 0 / 0.65);
 }
 
 @theme inline {
@@ -105,6 +101,8 @@
     font-family: var(--font-sans);
     line-height: 1.65; /* generous body line-height */
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
     overscroll-behavior-y: none;
   }
 
@@ -149,6 +147,8 @@
   background-color: var(--hm-glass);
   backdrop-filter: blur(16px) saturate(1.5);
   -webkit-backdrop-filter: blur(16px) saturate(1.5);
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 /* Horizontal task rows: real scroll-snap carousels on touch, tidy rows on

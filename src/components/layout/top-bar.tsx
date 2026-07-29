@@ -33,28 +33,27 @@ export function TopBar({ title }: { title?: string }) {
       transition={{ duration: 0.4 }}
       className="sticky top-0 z-40 border-b border-border/70 frosted"
     >
-      <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-4 px-5">
-        <button
-          onClick={() => dispatch({ type: 'go', view: state.role ? 'dashboard' : 'landing' })}
-          className="shrink-0 rounded-full"
-          aria-label="HiveMind home"
-        >
-          <Wordmark />
-        </button>
-
-        {/* The title sits in the flex flow rather than absolutely centred, so it
-            can never sit underneath the navigation. It truncates instead. */}
-        {title && (
-          <span
-            className={cn(
-              'hidden min-w-0 flex-1 truncate text-center text-sm font-medium text-muted lg:block',
-            )}
+      {/* The title sits beside the logo as a breadcrumb, in the flex flow, so it
+          cannot draw underneath the navigation the way the old centred version did. */}
+      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-5">
+        <div className="flex min-w-0 items-center gap-3">
+          <button
+            onClick={() => dispatch({ type: 'go', view: state.role ? 'dashboard' : 'landing' })}
+            className="flex shrink-0 items-center gap-2.5 rounded-full"
+            aria-label="HiveMind home"
           >
-            {title}
-          </span>
-        )}
+            <Wordmark />
+          </button>
 
-        <div className="ml-auto flex shrink-0 items-center gap-1.5">
+          {title && (
+            <div className="hidden min-w-0 items-center gap-2 sm:flex">
+              <span className="text-border">/</span>
+              <span className={cn('truncate text-xs font-semibold text-muted')}>{title}</span>
+            </div>
+          )}
+        </div>
+
+        <div className="flex shrink-0 items-center gap-1.5">
           <nav className="mr-1.5 hidden items-center gap-1 sm:flex" aria-label="Quick links">
             {NAV.map((n) => (
               <button
