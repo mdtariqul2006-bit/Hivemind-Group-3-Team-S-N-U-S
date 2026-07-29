@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -7,7 +7,7 @@
       name="description"
       content="HiveMind Smart Onboarding: a guided, role-specific first 30 days that turns an overwhelming first week into a calm, visibly-progressing journey."
     />
-    <meta name="theme-color" content="#FBFAF7" />
+    <meta name="theme-color" content="#121418" />
     <link
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 4 91 27v46L50 96 9 73V27z' fill='%23FFC370'/%3E%3C/svg%3E"
@@ -17,9 +17,7 @@
       // Set the theme before first paint so the app never flashes the wrong canvas.
       (() => {
         const stored = localStorage.getItem('hm-theme');
-        const theme =
-          stored ??
-          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const theme = stored ?? 'dark';
         document.documentElement.dataset.theme = theme;
       })();
     </script>

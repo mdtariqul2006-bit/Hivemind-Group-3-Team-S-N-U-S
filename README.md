@@ -1,42 +1,71 @@
-# HiveMind x Ravensbourne, Group 3, Team SNUS
+# HiveMind Smart Onboarding Prototype
 
-Work Based Learning project (module PLP22206, Ravensbourne University London, Semester 3, 2025/2026), delivered for HiveMind Academy as a 4 week UX Product Discovery Sprint focused on Smart Onboarding.
+Smart Onboarding is a guided first 30 days experience built for new starters at HiveMind Academy. It converts traditional document heavy onboarding into an interactive, role-specific journey with real-time progress tracking, 1:1 buddy matching, and clear milestone management.
 
-## Team name
+This prototype was developed for the Work Based Learning module (PLP22206) at Ravensbourne University London in partnership with HiveMind Academy.
 
-SNUS: Social, Navigable, User friendly, Scalable.
+## Key Features
 
-## Team members and roles
+* **Guided Phase Roadmap**: Step by step tasks split across Day 1, Week 1, and Month 1.
+* **Role Personalisation**: Custom paths tailored for Software Engineers, Product Designers, and Growth Marketers.
+* **Interactive Progress Hive**: Real-time progress visualizer tracking completed onboarding milestones.
+* **Team and Support Access**: Direct contact details for designated buddies, managers, and support channels.
+* **Interactive Document Hub**: Searchable repository of essential policies, handbook notes, and guides.
+* **Accessible and Motion Aware**: Built-in support for reduced motion preferences and keyboard accessibility.
 
-| Name | Role |
-|------|------|
-| Kowshick Ahmed Abir | Project Lead |
-| Tariqul Islam | UX/IA Designer |
-| Asan Limbu | UX Research Lead |
-| Dip Mondal | UI/Prototype Designer |
-| Bushra Rimi | Documentation Lead |
-| Anita Rahman | Technical/Feasibility Lead |
+## Tech Stack
 
-Module leader: Dr Aruna Duraisingam.
+* **Framework**: React 19 + Vite 6
+* **Language**: TypeScript
+* **Styling**: Tailwind CSS v4
+* **Animation & Shaders**: Framer Motion, GSAP, Lenis Smooth Scroll, WebGL Mesh Shaders
+* **Icons**: Lucide React
 
-## What this project is
+## Project Structure
 
-HiveMind Academy is an AI powered onboarding platform. Our job as a Product Discovery Squad is to research, design, and validate a Smart Onboarding experience for working professionals starting a new job or joining a new team, using real interviews rather than assumptions.
-
-## Repository structure
-
+```text
+src/
+├── components/
+│   ├── layout/       Top navigation bar, theme toggles, and shell elements
+│   ├── motion/       Particle canvas, 3D tilt cards, background shaders
+│   └── ui/           Reusable UI primitives (buttons, modals, progress hives)
+├── data/             Role templates, task databases, team contacts, and docs
+├── hooks/            Custom hooks for scroll, theme, and counter logic
+├── lib/              Utility functions, motion constants, and class merge helpers
+├── screens/          Primary app views (Landing, Personalise, Dashboard, People, Docs)
+├── state/            Global onboarding state context and toast notification manager
+├── styles/           Global CSS and Tailwind configuration
+└── types/            TypeScript definitions for tasks, roles, and view states
 ```
-research/       interview transcripts, notes, and synthesis
-docs/           hypotheses, success metrics, research plan, decisions log
-design/         journey maps, information architecture, wireframes, hi fi screens (exported from Figma)
-testing/        critical tasks, test script, participant notes
-delivery/       validation report and final presentation
-tech/           optional React / shadcn prototype slice, if the team builds one
-weekly-log.md   what was done each week, by whom, and roughly how long it took
-```
 
-This structure follows the folder layout suggested in the official HiveMind x Ravensbourne student handbook, so anyone outside the team can trace the process from research to final recommendations.
+## Local Development Setup
 
-## Status
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/mdtariqul2006-bit/Hivemind-Group-3-Team-S-N-U-S.git
+   cd Hivemind-Group-3-Team-S-N-U-S
+   ```
 
-Repository structure set up. Research, design, and testing evidence to follow as the sprint progresses.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the local development server:
+   ```bash
+   npm run dev
+   ```
+
+4. Build for production:
+   ```bash
+   npm run build
+   ```
+
+## Team Members (Group 3, Team SNUS)
+
+* **Kowshick Ahmed Abir**: Project Lead
+* **Tariqul Islam**: UX/IA Designer
+* **Asan Limbu**: UX Research Lead
+* **Dip Mondal**: UI/Prototype Designer
+* **Bushra Rimi**: Documentation Lead
+* **Anita Rahman**: Technical/Feasibility Lead
