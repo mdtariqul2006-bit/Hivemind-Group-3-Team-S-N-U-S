@@ -34,6 +34,18 @@ export const HIVEMIND_RESEARCH = {
       sage: '#BAC9C5',
     },
   },
+  /**
+   * The mission and positioning statements, taken from the HiveMind Academy
+   * organisational report (July 2026), sections 1 and 2.
+   */
+  mission: {
+    statement:
+      'Structure the way your organisation learns. Turn scattered knowledge and ad-hoc onboarding into a structured, AI-supported learning system.',
+    lead: 'Modern organisations lose time to scattered knowledge and ad-hoc onboarding.',
+    body: 'HiveMind combines psychology-led consulting, bespoke learning journeys and an AI-powered knowledge management system. Teams ramp up faster and share what they know, because knowledge becomes a living system rather than a folder nobody opens.',
+    outcome: 'People perform with confidence from day one.',
+    image: ASSETS.structureLearning,
+  },
   valuePropositions: [
     {
       id: 'usp-1',
@@ -65,6 +77,8 @@ export const HIVEMIND_RESEARCH = {
       step: 1,
       title: 'Step 1: Consultation & Discovery',
       body: 'We start by mapping your current world: how knowledge is stored, how people join and move roles, where onboarding breaks and where documentation lives.',
+      detail:
+        'Through stakeholder interviews and systems reviews we surface the real pain behind knowledge silos, fragmented onboarding and compliance overload.',
       image: ASSETS.consult,
       linkText: 'See Our Approach',
       linkUrl: '/services',
@@ -73,6 +87,8 @@ export const HIVEMIND_RESEARCH = {
       step: 2,
       title: 'Step 2: Bespoke Course Creation',
       body: 'We co-design a tailored knowledge and onboarding architecture: role-specific journeys, centralised single source of truth documentation, and interactive training.',
+      detail:
+        'Every element is psychologically informed and aligned to your culture, your processes and the systems your teams already use.',
       image: ASSETS.discuss,
       linkText: 'Learn More',
       linkUrl: '/services#industry',
@@ -81,28 +97,41 @@ export const HIVEMIND_RESEARCH = {
       step: 3,
       title: 'Step 3: Implementation & Support',
       body: 'We pilot, iterate and embed. Together, we roll out your new onboarding and knowledge flows, measure time-to-productivity, and refine until the system feels natural.',
+      detail:
+        'We track time-to-productivity, engagement and user feedback, then keep refining. We stay involved as you scale.',
       image: ASSETS.delivery,
       linkText: 'Book Your Free Call',
       linkUrl: '/contact',
     },
   ],
+  /**
+   * How the team works with a client. The framing line matters: HiveMind does
+   * not arrive with a pre-written playbook (report section 4).
+   */
+  workingStyle: {
+    intro: 'We do not arrive with a pre-written playbook.',
+    body: 'We start by understanding how your organisation actually runs: the pace, the pressures and the unwritten rules people navigate every day.',
+  },
   workingPrinciples: [
     {
       num: 1,
       title: 'Listen first',
       body: 'We spend time with your teams before we touch a single template. Through conversations and workshops, we listen for where people feel lost.',
+      detail: 'That shared understanding becomes the brief for everything that follows.',
       image: ASSETS.listenFirst,
     },
     {
       num: 2,
       title: 'Design with your reality in mind',
       body: 'We translate those insights into simple, practical changes: clearer journeys, better signposting, and AI support.',
+      detail: 'We prioritise whatever removes the most friction, in formats teams will actually adopt.',
       image: ASSETS.designReality,
     },
     {
       num: 3,
       title: 'Embed and iterate',
       body: 'We roll things out in manageable pilots, build internal champions and watch how people really use the new flows.',
+      detail: 'Then we tune the language, the touchpoints and the automation rules together with you.',
       image: ASSETS.embedIterate,
     },
   ],
