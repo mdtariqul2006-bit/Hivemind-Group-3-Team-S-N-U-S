@@ -11,27 +11,31 @@ import { Documents } from '@/screens/documents';
 import { TaskDetail } from '@/screens/task-detail';
 import { Milestone } from '@/screens/milestone';
 import { AdminDashboard } from '@/screens/admin-dashboard';
+import { AdminLogin } from '@/screens/admin-login';
 import { ToastStack } from '@/components/ui/toast-stack';
+import { useAuth } from '@/state/auth-context';
 import { EASE_OUT } from '@/lib/motion';
 
 const TITLES: Record<string, string> = {
   dashboard: 'Your first 30 days',
   people: 'People & support',
   documents: 'Key documents',
-  admin: 'Enterprise Admin Console',
 };
 
 export function App() {
   const reduce = useReducedMotion();
   const { state, tasks } = useOnboarding();
+  const { isAuthenticated, ready } = useAuth();
   useSmoothScroll();
 
   const openTask = state.openTaskId
     ? (tasks.find((t) => t.id === state.openTaskId) ?? null)
     : null;
 
+  // The admin console ships its own sidebar and header, so the site top bar is
+  // deliberately left out of that view.
   const showTopBar =
-    state.view === 'dashboard' || state.view === 'people' || state.view === 'documents' || state.view === 'admin';
+    state.view === 'dashboard' || state.view === 'people' || state.view === 'documents';
 
   return (
     <div className="relative min-h-[100dvh]">
@@ -61,7 +65,17 @@ export function App() {
             {state.view === 'dashboard' && <Dashboard />}
             {state.view === 'people' && <People />}
             {state.view === 'documents' && <Documents />}
-            {state.view === 'admin' && <AdminDashboard />}
+            {/* Protected route: the console renders only against a valid token.
+                While the stored token is being checked we hold the frame so the
+                login form does not flash for an already signed in admin. */}
+            {state.view === 'admin' &&
+              (!ready ? (
+                <div className="min-h-[60dvh]" />
+              ) : isAuthenticated ? (
+                <AdminDashboard />
+              ) : (
+                <AdminLogin />
+              ))}
           </motion.div>
         </AnimatePresence>
       </main>
