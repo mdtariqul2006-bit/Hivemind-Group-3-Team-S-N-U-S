@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Reveal, RevealGroup } from '@/components/motion/reveal';
 import { HexFrame } from '@/components/ui/hex-frame';
 import ShaderShowcase from '@/components/ui/hero';
+import { Section as RobotSection } from '@/components/ui/robot-demo';
 import { FloatingPaths } from '@/components/ui/background-paths';
 import { AnimatedGradient } from '@/components/ui/animated-gradient';
 import { GlowCard } from '@/components/motion/glow-card';
@@ -40,7 +41,13 @@ export function Landing() {
         <ShaderShowcase
           onStartClick={() => dispatch({ type: 'go', view: 'personalise' })}
           onDashboardClick={() => dispatch({ type: 'go', view: 'dashboard' })}
+          onAdminClick={() => dispatch({ type: 'go', view: 'admin' })}
         />
+      </div>
+
+      {/* Interactive 3D Robot Whobee Section */}
+      <div className="mx-auto max-w-6xl px-5">
+        <RobotSection />
       </div>
 
       {/* Promises section featuring animated background paths and gradient blobs */}

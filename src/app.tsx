@@ -10,6 +10,7 @@ import { People } from '@/screens/people';
 import { Documents } from '@/screens/documents';
 import { TaskDetail } from '@/screens/task-detail';
 import { Milestone } from '@/screens/milestone';
+import { AdminDashboard } from '@/screens/admin-dashboard';
 import { ToastStack } from '@/components/ui/toast-stack';
 import { EASE_OUT } from '@/lib/motion';
 
@@ -17,6 +18,7 @@ const TITLES: Record<string, string> = {
   dashboard: 'Your first 30 days',
   people: 'People & support',
   documents: 'Key documents',
+  admin: 'Enterprise Admin Console',
 };
 
 export function App() {
@@ -29,7 +31,7 @@ export function App() {
     : null;
 
   const showTopBar =
-    state.view === 'dashboard' || state.view === 'people' || state.view === 'documents';
+    state.view === 'dashboard' || state.view === 'people' || state.view === 'documents' || state.view === 'admin';
 
   return (
     <div className="relative min-h-[100dvh]">
@@ -59,6 +61,7 @@ export function App() {
             {state.view === 'dashboard' && <Dashboard />}
             {state.view === 'people' && <People />}
             {state.view === 'documents' && <Documents />}
+            {state.view === 'admin' && <AdminDashboard />}
           </motion.div>
         </AnimatePresence>
       </main>

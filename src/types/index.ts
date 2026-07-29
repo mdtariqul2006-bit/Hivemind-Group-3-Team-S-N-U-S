@@ -4,7 +4,7 @@ export type LearningStyle = 'video' | 'reading' | 'hands-on';
 
 export type PhaseId = 'day-1' | 'week-1' | 'month-1';
 
-export type View = 'landing' | 'personalise' | 'dashboard' | 'people' | 'documents';
+export type View = 'landing' | 'personalise' | 'dashboard' | 'people' | 'documents' | 'admin';
 
 export interface Role {
   id: RoleId;

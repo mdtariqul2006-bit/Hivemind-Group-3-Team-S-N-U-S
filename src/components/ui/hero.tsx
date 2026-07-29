@@ -3,14 +3,16 @@ import { useEffect, useRef, useState } from "react"
 import { MeshGradient, PulsingBorder } from "@paper-design/shaders-react"
 import { motion, useReducedMotion } from "framer-motion"
 import { useTheme } from "@/hooks/use-theme"
+import { LogoMark } from "@/components/ui/logo"
 import { ArrowRight } from "lucide-react"
 
 interface ShaderShowcaseProps {
   onStartClick?: () => void
   onDashboardClick?: () => void
+  onAdminClick?: () => void
 }
 
-export default function ShaderShowcase({ onStartClick, onDashboardClick }: ShaderShowcaseProps) {
+export default function ShaderShowcase({ onStartClick, onDashboardClick, onAdminClick }: ShaderShowcaseProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [, setIsActive] = useState(false)
   const { theme } = useTheme()
@@ -115,25 +117,36 @@ export default function ShaderShowcase({ onStartClick, onDashboardClick }: Shade
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
             <div className="flex items-center gap-2">
-              <img src="/ico-logo.svg" alt="HiveMind Logo" className="h-9 w-9 drop-shadow-md" />
+              <LogoMark size={32} />
               <span className="text-xl font-extrabold tracking-tight text-ink">HiveMind</span>
             </div>
           </motion.div>
 
-          {/* Interactive gooey button */}
-          <div id="gooey-btn" className="relative flex items-center group" style={{ filter: "url(#gooey-filter)" }}>
-            <button
-              onClick={onDashboardClick}
-              className="absolute right-0 px-3 py-2 rounded-full bg-charcoal text-white font-normal text-xs transition-all duration-300 hover:bg-charcoal/90 cursor-pointer h-9 flex items-center justify-center -translate-x-10 group-hover:-translate-x-20 z-0"
-            >
-              <ArrowRight className="w-4 h-4" />
-            </button>
-            <button
-              onClick={onDashboardClick}
-              className="px-6 py-2 rounded-full bg-charcoal text-white font-medium text-xs transition-all duration-300 hover:bg-charcoal/90 cursor-pointer h-9 flex items-center z-10 shadow-md"
-            >
-              Go to Dashboard
-            </button>
+          <div className="flex items-center gap-3">
+            {onAdminClick && (
+              <button
+                onClick={onAdminClick}
+                className="px-4 py-2 rounded-full bg-surface/80 border border-border text-ink font-semibold text-xs transition-all duration-300 hover:bg-sunk cursor-pointer shadow-sm backdrop-blur-md flex items-center gap-1.5"
+              >
+                <span>🛡️</span> Admin Panel
+              </button>
+            )}
+
+            {/* Interactive gooey button */}
+            <div id="gooey-btn" className="relative flex items-center group" style={{ filter: "url(#gooey-filter)" }}>
+              <button
+                onClick={onDashboardClick}
+                className="absolute right-0 px-3 py-2 rounded-full bg-charcoal text-white font-normal text-xs transition-all duration-300 hover:bg-charcoal/90 cursor-pointer h-9 flex items-center justify-center -translate-x-10 group-hover:-translate-x-20 z-0"
+              >
+                <ArrowRight className="w-4 h-4" />
+              </button>
+              <button
+                onClick={onDashboardClick}
+                className="px-6 py-2 rounded-full bg-charcoal text-white font-medium text-xs transition-all duration-300 hover:bg-charcoal/90 cursor-pointer h-9 flex items-center z-10 shadow-md"
+              >
+                Go to Dashboard
+              </button>
+            </div>
           </div>
         </header>
 
