@@ -13,8 +13,6 @@ import { Milestone } from '@/screens/milestone';
 import { AdminDashboard } from '@/screens/admin-dashboard';
 import { ToastStack } from '@/components/ui/toast-stack';
 import { EASE_OUT } from '@/lib/motion';
-import { CustomCursor } from '@/components/ui/custom-cursor';
-import { ParticleCanvas } from '@/components/motion/particle-canvas';
 
 const TITLES: Record<string, string> = {
   dashboard: 'Your first 30 days',
@@ -37,8 +35,6 @@ export function App() {
 
   return (
     <div className="relative min-h-[100dvh]">
-      <CustomCursor />
-      <ParticleCanvas />
       <AnimatedBackground />
 
       {/* Skip link, keyboard users land straight on the content. */}

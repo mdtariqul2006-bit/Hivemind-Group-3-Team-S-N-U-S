@@ -5,9 +5,15 @@ import { Button } from '@/components/ui/button';
 import { Reveal, RevealGroup } from '@/components/motion/reveal';
 import { HexFrame } from '@/components/ui/hex-frame';
 import ShaderShowcase from '@/components/ui/hero';
+import { Section as RobotSection } from '@/components/ui/robot-demo';
 import { FloatingPaths } from '@/components/ui/background-paths';
 import { AnimatedGradient } from '@/components/ui/animated-gradient';
 import { GlowCard } from '@/components/motion/glow-card';
+import { MissionBand } from '@/components/blocks/MissionBand';
+import { PillarsSection } from '@/components/blocks/PillarsSection';
+import { ProcessSection } from '@/components/blocks/ProcessSection';
+import { PrinciplesSection } from '@/components/blocks/PrinciplesSection';
+import { InsightsSection } from '@/components/blocks/InsightsSection';
 
 const PROMISES = [
   {
@@ -40,14 +46,20 @@ export function Landing() {
         <ShaderShowcase
           onStartClick={() => dispatch({ type: 'go', view: 'personalise' })}
           onDashboardClick={() => dispatch({ type: 'go', view: 'dashboard' })}
+          onAdminClick={() => dispatch({ type: 'go', view: 'admin' })}
         />
+      </div>
+
+      {/* Interactive 3D Robot Whobee Section */}
+      <div className="mx-auto max-w-6xl px-5">
+        <RobotSection />
       </div>
 
       {/* Promises section featuring animated background paths and gradient blobs */}
       <section className="relative overflow-hidden border-t border-border bg-canvas py-24">
         {/* Animated gradients and paths in the background */}
         <AnimatedGradient
-          colors={['#FFC370', '#F4B8BD', '#BAC9C5']}
+          colors={['var(--hm-honey)', 'var(--hm-pink)', 'var(--hm-sage)']}
           speed={0.15}
           blur="heavy"
         />
@@ -86,10 +98,21 @@ export function Landing() {
               </motion.div>
             ))}
           </RevealGroup>
+        </div>
+      </section>
 
-          {/* Quick personalization CTA banner */}
-          <Reveal className="mt-16" delay={0.05}>
-            <div className="relative overflow-hidden rounded-3xl border border-border bg-surface px-8 py-8 shadow-sm">
+      {/* The research backed story: what we are for, then how the work is done. */}
+      <MissionBand />
+      <PillarsSection />
+      <ProcessSection />
+      <PrinciplesSection />
+      <InsightsSection />
+
+      {/* Closing personalisation CTA */}
+      <section className="relative overflow-hidden border-t border-border bg-canvas py-20">
+        <div className="mx-auto w-full max-w-6xl px-5">
+          <Reveal delay={0.05}>
+            <div className="relative overflow-hidden rounded-3xl border border-border bg-surface/75 backdrop-blur-md px-8 py-8 shadow-sm">
               <div className="absolute right-0 top-0 -mr-16 -mt-16 h-36 w-36 rounded-full bg-honey/10 blur-2xl" />
               <div className="relative flex flex-wrap items-center justify-between gap-6">
                 <div className="max-w-xl">
