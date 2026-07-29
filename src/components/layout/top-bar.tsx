@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { FileText, Users, ShieldCheck } from 'lucide-react';
+import { FileText, Users } from 'lucide-react';
 import { NEW_HIRE } from '@/data/roles';
 import { useOnboarding } from '@/state/onboarding-context';
 import type { View } from '@/types';
@@ -8,11 +8,13 @@ import { Wordmark } from '@/components/ui/logo';
 import { ThemeToggle } from './theme-toggle';
 import { cn } from '@/lib/cn';
 
+// Starter facing navigation only. The admin console is reached through the
+// Login button on the landing page, so new starters are never shown a tab that
+// leads to a sign in wall they cannot pass.
 const NAV: { view: View; label: string; icon: typeof Users }[] = [
   { view: 'dashboard', label: 'Dashboard', icon: Users },
   { view: 'people', label: 'People', icon: Users },
   { view: 'documents', label: 'Documents', icon: FileText },
-  { view: 'admin', label: 'Admin', icon: ShieldCheck },
 ];
 
 /**

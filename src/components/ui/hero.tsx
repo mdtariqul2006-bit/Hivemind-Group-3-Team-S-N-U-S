@@ -128,7 +128,7 @@ export default function ShaderShowcase({ onStartClick, onDashboardClick, onAdmin
                 onClick={onAdminClick}
                 className="px-4 py-2 rounded-full bg-surface/80 border border-border text-ink font-semibold text-xs transition-all duration-300 hover:bg-sunk cursor-pointer shadow-sm backdrop-blur-md flex items-center gap-1.5"
               >
-                <span>🛡️</span> Admin Panel
+                <span>🛡️</span> Login
               </button>
             )}
 
