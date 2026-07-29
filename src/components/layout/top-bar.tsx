@@ -33,26 +33,28 @@ export function TopBar({ title }: { title?: string }) {
       transition={{ duration: 0.4 }}
       className="sticky top-0 z-40 border-b border-border/70 frosted"
     >
-      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-5">
+      <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-4 px-5">
         <button
           onClick={() => dispatch({ type: 'go', view: state.role ? 'dashboard' : 'landing' })}
-          className="rounded-full"
+          className="shrink-0 rounded-full"
           aria-label="HiveMind home"
         >
           <Wordmark />
         </button>
 
+        {/* The title sits in the flex flow rather than absolutely centred, so it
+            can never sit underneath the navigation. It truncates instead. */}
         {title && (
           <span
             className={cn(
-              'absolute left-1/2 hidden -translate-x-1/2 text-sm font-medium text-muted lg:block',
+              'hidden min-w-0 flex-1 truncate text-center text-sm font-medium text-muted lg:block',
             )}
           >
             {title}
           </span>
         )}
 
-        <div className="flex items-center gap-1.5">
+        <div className="ml-auto flex shrink-0 items-center gap-1.5">
           <nav className="mr-1.5 hidden items-center gap-1 sm:flex" aria-label="Quick links">
             {NAV.map((n) => (
               <button
