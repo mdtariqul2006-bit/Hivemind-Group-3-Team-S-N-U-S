@@ -9,6 +9,16 @@ export function CustomCursor() {
 
   useEffect(() => {
     if (reduce) return;
+    // Hide the native cursor while the custom cursor is active.
+    const prev = document.body.style.cursor;
+    document.body.style.cursor = 'none';
+    return () => {
+      document.body.style.cursor = prev;
+    };
+  }, [reduce]);
+
+  useEffect(() => {
+    if (reduce) return;
 
     const handleMouseMove = (e: MouseEvent) => {
       setMousePos({ x: e.clientX, y: e.clientY });

@@ -49,6 +49,10 @@
 
   --hm-scrim: rgb(5 7 9 / 0.75);
   --hm-glass: rgb(20 24 31 / 0.85);
+
+  /* Dark-mode shadows use pure black so elevation is visible on the dark canvas. */
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.30), 0 12px 32px -12px rgb(0 0 0 / 0.50);
+  --shadow-lift: 0 1px 2px rgb(0 0 0 / 0.40), 0 24px 48px -16px rgb(0 0 0 / 0.65);
 }
 
 @theme inline {
