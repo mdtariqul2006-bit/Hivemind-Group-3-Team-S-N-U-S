@@ -1,5 +1,4 @@
 import { useState, type FormEvent } from 'react';
-import { ShieldCheck } from 'lucide-react';
 import { useMember } from '@/state/member-context';
 import { useOnboarding } from '@/state/onboarding-context';
 import { Button } from '@/components/ui/button';
@@ -106,13 +105,6 @@ export function Auth() {
             {tab === 'sign-in' ? 'Sign in' : 'Create account'}
           </Button>
         </form>
-
-        {tab === 'sign-in' && (
-          <p className="mt-5 flex items-start gap-2 rounded-xl border border-border bg-sunk/60 px-3 py-2.5 text-xs text-muted">
-            <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-honey-deep" />
-            Demo admin account: admin@hivemind.dev / hivemind-admin
-          </p>
-        )}
       </GlowCard>
     </div>
   );
