@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { ShieldCheck } from 'lucide-react';
-import { useAuth } from '@/state/auth-context';
+import { useMember } from '@/state/member-context';
 import { useOnboarding } from '@/state/onboarding-context';
 import { Button } from '@/components/ui/button';
 import { GlowCard } from '@/components/motion/glow-card';
@@ -10,7 +10,7 @@ import { cn } from '@/lib/cn';
 type Tab = 'sign-in' | 'sign-up';
 
 export function Auth() {
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp } = useMember();
   const { dispatch } = useOnboarding();
   const [tab, setTab] = useState<Tab>('sign-in');
   const [email, setEmail] = useState('');

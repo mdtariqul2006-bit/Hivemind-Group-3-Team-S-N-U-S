@@ -1,33 +1,32 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { FileText, LogOut, Users, ShieldCheck } from 'lucide-react';
+import { FileText, LogOut, Users } from 'lucide-react';
 import { NEW_HIRE } from '@/data/roles';
 import { useOnboarding } from '@/state/onboarding-context';
-import { useAuth } from '@/state/auth-context';
+import { useMember } from '@/state/member-context';
 import type { View } from '@/types';
 import { Avatar } from '@/components/ui/avatar';
 import { Wordmark } from '@/components/ui/logo';
 import { ThemeToggle } from './theme-toggle';
 import { cn } from '@/lib/cn';
 
-const BASE_NAV: { view: View; label: string; icon: typeof Users }[] = [
+// Starter facing navigation only. The admin console is reached through the
+// Login button on the landing page, so new starters are never shown a tab that
+// leads to a sign in wall they cannot pass.
+const NAV: { view: View; label: string; icon: typeof Users }[] = [
   { view: 'dashboard', label: 'Dashboard', icon: Users },
   { view: 'people', label: 'People', icon: Users },
   { view: 'documents', label: 'Documents', icon: FileText },
 ];
 
-const ADMIN_NAV_ITEM = { view: 'admin' as const, label: 'Admin', icon: ShieldCheck };
-
 /**
  * Persistent frosted top bar: logo mark, contextual page title, theme toggle and
- * Alex's avatar. Present on every screen except the immersive landing hero, where
- * the header is part of the hero itself.
+ * Alex's avatar. Present on every screen except the immersive landing hero and
+ * the admin console, which ship their own headers.
  */
 export function TopBar({ title }: { title?: string }) {
   const reduce = useReducedMotion();
   const { state, dispatch } = useOnboarding();
-  const { user, signOut } = useAuth();
-
-  const nav = user?.role === 'admin' ? [...BASE_NAV, ADMIN_NAV_ITEM] : BASE_NAV;
+  const { user, signOut } = useMember();
 
   function handleSignOut() {
     signOut();
@@ -41,27 +40,29 @@ export function TopBar({ title }: { title?: string }) {
       transition={{ duration: 0.4 }}
       className="sticky top-0 z-40 border-b border-border/70 frosted"
     >
-      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-5">
-        <div className="flex items-center gap-3">
+      {/* The title sits beside the logo as a breadcrumb, in the flex flow, so it
+          cannot draw underneath the navigation the way the old centred version did. */}
+      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-5">
+        <div className="flex min-w-0 items-center gap-3">
           <button
             onClick={() => dispatch({ type: 'go', view: state.role ? 'dashboard' : 'landing' })}
-            className="rounded-full flex items-center gap-2.5"
+            className="flex shrink-0 items-center gap-2.5 rounded-full"
             aria-label="HiveMind home"
           >
             <Wordmark />
           </button>
 
           {title && (
-            <div className="hidden sm:flex items-center gap-2">
+            <div className="hidden min-w-0 items-center gap-2 sm:flex">
               <span className="text-border">/</span>
-              <span className="text-xs font-semibold text-muted">{title}</span>
+              <span className={cn('truncate text-xs font-semibold text-muted')}>{title}</span>
             </div>
           )}
         </div>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex shrink-0 items-center gap-1.5">
           <nav className="mr-1.5 hidden items-center gap-1 sm:flex" aria-label="Quick links">
-            {nav.map((n) => (
+            {NAV.map((n) => (
               <button
                 key={n.view}
                 onClick={() => dispatch({ type: 'go', view: n.view })}

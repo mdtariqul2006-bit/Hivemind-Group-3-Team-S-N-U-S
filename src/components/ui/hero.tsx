@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { MeshGradient, PulsingBorder } from "@paper-design/shaders-react"
 import { motion, useReducedMotion } from "framer-motion"
 import { useTheme } from "@/hooks/use-theme"
-import { useAuth } from "@/state/auth-context"
+import { useMember } from "@/state/member-context"
 import { Wordmark } from "@/components/ui/logo"
 import { ArrowRight } from "lucide-react"
 
@@ -18,7 +18,7 @@ export default function ShaderShowcase({ onStartClick, onDashboardClick, onAdmin
   const containerRef = useRef<HTMLDivElement>(null)
   const [, setIsActive] = useState(false)
   const { theme } = useTheme()
-  const { user } = useAuth()
+  const { user: member } = useMember()
   const reduce = useReducedMotion()
 
   useEffect(() => {
@@ -123,21 +123,23 @@ export default function ShaderShowcase({ onStartClick, onDashboardClick, onAdmin
           </motion.div>
 
           <div className="flex items-center gap-3">
-            {user?.role === "admin" && onAdminClick && (
-              <button
-                onClick={onAdminClick}
-                className="px-4 py-2 rounded-full bg-surface/80 border border-border text-ink font-semibold text-xs transition-all duration-300 hover:bg-sunk cursor-pointer shadow-sm backdrop-blur-md flex items-center gap-1.5"
-              >
-                <span>🛡️</span> Admin Panel
-              </button>
-            )}
-
-            {!user && onSignInClick && (
+            {!member && onSignInClick && (
               <button
                 onClick={onSignInClick}
                 className="px-4 py-2 rounded-full bg-surface/80 border border-border text-ink font-semibold text-xs transition-all duration-300 hover:bg-sunk cursor-pointer shadow-sm backdrop-blur-md"
               >
                 Sign In
+              </button>
+            )}
+
+            {/* Always visible. The console itself is the gate: it shows the login
+                form or the dashboard depending on whether a valid token is stored. */}
+            {onAdminClick && (
+              <button
+                onClick={onAdminClick}
+                className="px-4 py-2 rounded-full bg-surface/80 border border-border text-ink font-semibold text-xs transition-all duration-300 hover:bg-sunk cursor-pointer shadow-sm backdrop-blur-md flex items-center gap-1.5"
+              >
+                <span>🛡️</span> Login
               </button>
             )}
 
