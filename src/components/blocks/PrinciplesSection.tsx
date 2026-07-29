@@ -1,4 +1,6 @@
 import { Reveal, RevealGroup, RevealItem } from '@/components/motion/reveal';
+import { IconPanel } from '@/components/ui/icon-panel';
+import { RESEARCH_ICONS } from '@/lib/research-icons';
 import { HIVEMIND_RESEARCH } from '@/library';
 
 const { workingStyle, workingPrinciples } = HIVEMIND_RESEARCH;
@@ -25,15 +27,11 @@ export function PrinciplesSection() {
           {workingPrinciples.map((principle) => (
             <RevealItem key={principle.num} className="h-full">
               <article className="flex h-full flex-col">
-                <div className="overflow-hidden rounded-3xl border border-border shadow-[var(--shadow-soft)]">
-                  <img
-                    src={principle.image}
-                    alt=""
-                    aria-hidden
-                    loading="lazy"
-                    className="aspect-[4/3] w-full object-cover"
-                  />
-                </div>
+                <IconPanel
+                  icon={RESEARCH_ICONS[principle.icon]}
+                  accent={principle.accent}
+                  className="aspect-[4/3] w-full rounded-3xl border border-border shadow-[var(--shadow-soft)]"
+                />
 
                 <div className="mt-5 flex items-baseline gap-3">
                   <span className="text-sm font-black text-honey-deep numeral">
