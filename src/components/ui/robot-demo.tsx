@@ -21,7 +21,7 @@ export function Section() {
       </div>
 
       {/* 3D Interactive Canvas Container */}
-      <div className="relative h-[480px] w-full bg-sunk/40">
+      <div className="relative h-[480px] w-full bg-sunk/40" style={{ transform: 'translateZ(0)', contain: 'content' }}>
         <InteractiveRobotSpline
           scene={ROBOT_SCENE_URL}
           className="w-full h-full" 

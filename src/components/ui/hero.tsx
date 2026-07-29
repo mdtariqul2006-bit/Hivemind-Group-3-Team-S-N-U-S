@@ -94,7 +94,7 @@ export default function ShaderShowcase({ onStartClick, onDashboardClick, onAdmin
 
       {/* Mesh gradients from paper-design shaders */}
       {!reduce && (
-        <>
+        <div className="absolute inset-0 w-full h-full pointer-events-none" style={{ transform: "translateZ(0)", willChange: "transform" }}>
           <MeshGradient
             className="absolute inset-0 w-full h-full opacity-20"
             colors={meshColors}
@@ -105,7 +105,7 @@ export default function ShaderShowcase({ onStartClick, onDashboardClick, onAdmin
             colors={["#000000", "#FFC370", "#F4B8BD", "#BAC9C5"]}
             speed={0.05}
           />
-        </>
+        </div>
       )}
 
       {/* Hero Content Overlay */}
