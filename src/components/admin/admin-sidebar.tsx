@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { motion, useReducedMotion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard,
@@ -12,6 +13,22 @@ import { LogoMark } from '@/components/ui/logo';
 import { useAuth } from '@/state/auth-context';
 import { springSoft } from '@/lib/motion';
 import { cn } from '@/lib/cn';
+
+/** Matches the `lg` breakpoint, where the sidebar becomes an always-visible rail. */
+function useIsDesktopRail(): boolean {
+  const [isDesktop, setIsDesktop] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches,
+  );
+
+  useEffect(() => {
+    const mql = window.matchMedia('(min-width: 1024px)');
+    const onChange = () => setIsDesktop(mql.matches);
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
+
+  return isDesktop;
+}
 
 export type AdminSection = 'overview' | 'starters' | 'analytics' | 'documents' | 'security';
 
@@ -32,6 +49,12 @@ interface SidebarProps {
 }
 
 export function AdminSidebar({ active, onSelect, open, onClose }: SidebarProps) {
+  const isDesktopRail = useIsDesktopRail();
+  // Below `lg` the drawer is only a transform away from the viewport, not
+  // actually removed, so its nav links and sign out button stay keyboard
+  // focusable and screen-reader visible unless explicitly hidden here.
+  const offscreen = !open && !isDesktopRail;
+
   return (
     <>
       {/* Mobile scrim */}
@@ -49,6 +72,8 @@ export function AdminSidebar({ active, onSelect, open, onClose }: SidebarProps) 
       </AnimatePresence>
 
       <aside
+        aria-hidden={offscreen}
+        inert={offscreen}
         className={cn(
           'fixed inset-y-0 left-0 z-50 w-[264px] border-r border-border bg-surface transition-transform duration-300 lg:translate-x-0',
           open ? 'translate-x-0' : '-translate-x-full',

@@ -5,8 +5,9 @@ import { toPoints, smoothPath } from './chart-utils';
 
 const W = 640;
 const H = 240;
-const PAD_X = 8;
-const PAD_Y = 16;
+// Single padding for both axes. The plotted line/area is inset by this same
+// amount via toPoints() below, gridlines must match or the two visibly drift.
+const PAD = 16;
 
 /**
  * The headline completion trend. Draws a smooth honey line over a soft gradient
@@ -18,14 +19,14 @@ export function AreaChart({ data }: { data: SeriesPoint[] }) {
   const [hover, setHover] = useState<number | null>(null);
 
   const values = data.map((d) => d.value);
-  const pts = toPoints(values, W, H, PAD_Y);
+  const pts = toPoints(values, W, H, PAD);
   const first = pts[0];
   const last = pts[pts.length - 1];
 
   const line = smoothPath(pts);
   const area =
-    first && last ? `${line} L ${last.x} ${H - PAD_Y} L ${first.x} ${H - PAD_Y} Z` : '';
-  const gridY = [0.25, 0.5, 0.75].map((f) => PAD_Y + f * (H - PAD_Y * 2));
+    first && last ? `${line} L ${last.x} ${H - PAD} L ${first.x} ${H - PAD} Z` : '';
+  const gridY = [0.25, 0.5, 0.75].map((f) => PAD + f * (H - PAD * 2));
 
   const active = hover === null ? null : (pts[hover] ?? null);
   const activePoint = hover === null ? null : (data[hover] ?? null);
@@ -47,7 +48,7 @@ export function AreaChart({ data }: { data: SeriesPoint[] }) {
         </defs>
 
         {gridY.map((y) => (
-          <line key={y} x1={PAD_X} y1={y} x2={W - PAD_X} y2={y} stroke="var(--hm-border)" strokeWidth={1} />
+          <line key={y} x1={PAD} y1={y} x2={W - PAD} y2={y} stroke="var(--hm-border)" strokeWidth={1} />
         ))}
 
         <motion.path
@@ -69,7 +70,8 @@ export function AreaChart({ data }: { data: SeriesPoint[] }) {
           transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
         />
 
-        {/* Invisible hover zones per data point. */}
+        {/* Invisible hit zones per data point, keyboard-focusable so the same
+            per-week value a mouse user gets on hover is reachable by Tab too. */}
         {pts.map((p, i) => (
           <rect
             key={i}
@@ -78,13 +80,17 @@ export function AreaChart({ data }: { data: SeriesPoint[] }) {
             width={W / pts.length}
             height={H}
             fill="transparent"
+            tabIndex={0}
+            aria-label={`${data[i]?.label}: ${data[i]?.value}%`}
             onMouseEnter={() => setHover(i)}
+            onFocus={() => setHover(i)}
+            onBlur={() => setHover(null)}
           />
         ))}
 
         {active && (
           <g>
-            <line x1={active.x} y1={PAD_Y} x2={active.x} y2={H - PAD_Y} stroke="var(--hm-honey)" strokeWidth={1} strokeDasharray="4 4" />
+            <line x1={active.x} y1={PAD} x2={active.x} y2={H - PAD} stroke="var(--hm-honey)" strokeWidth={1} strokeDasharray="4 4" />
             <circle cx={active.x} cy={active.y} r={6} fill="var(--hm-honey)" stroke="var(--hm-surface)" strokeWidth={3} />
           </g>
         )}

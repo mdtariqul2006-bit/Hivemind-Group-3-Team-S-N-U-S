@@ -39,6 +39,9 @@ import { EASE_OUT } from '@/lib/motion';
 export function AdminDashboard() {
   const [section, setSection] = useState<AdminSection>('overview');
   const [navOpen, setNavOpen] = useState(false);
+  // Lifted so the topbar's console search can actually land somewhere: it
+  // jumps to the starter roster and filters it, rather than doing nothing.
+  const [starterQuery, setStarterQuery] = useState('');
   const reduce = useReducedMotion();
 
   const title = NAV.find((n) => n.id === section)?.label ?? 'Overview';
@@ -56,7 +59,13 @@ export function AdminDashboard() {
       />
 
       <div className="lg:pl-[264px]">
-        <AdminTopbar title={title} onMenu={() => setNavOpen(true)} />
+        <AdminTopbar
+          title={title}
+          onMenu={() => setNavOpen(true)}
+          searchValue={starterQuery}
+          onSearchChange={setStarterQuery}
+          onSearchSubmit={() => setSection('starters')}
+        />
 
         <div className="px-4 py-6 sm:px-6 lg:px-8">
           <AnimatePresence mode="wait">
@@ -68,7 +77,9 @@ export function AdminDashboard() {
               transition={reduce ? { duration: 0.15 } : { duration: 0.35, ease: EASE_OUT }}
             >
               {section === 'overview' && <OverviewSection />}
-              {section === 'starters' && <StartersSection />}
+              {section === 'starters' && (
+                <StartersSection query={starterQuery} onQueryChange={setStarterQuery} />
+              )}
               {section === 'analytics' && <AnalyticsSection />}
               {section === 'documents' && <DocumentsSection />}
               {section === 'security' && <SecuritySection />}
@@ -173,7 +184,13 @@ function OverviewSection() {
   );
 }
 
-function StartersSection() {
+function StartersSection({
+  query,
+  onQueryChange,
+}: {
+  query: string;
+  onQueryChange: (query: string) => void;
+}) {
   return (
     <>
       <SectionHeader
@@ -182,7 +199,7 @@ function StartersSection() {
       />
       <Reveal>
         <GlowCard className="p-5 sm:p-6">
-          <RosterTable />
+          <RosterTable query={query} onQueryChange={onQueryChange} />
         </GlowCard>
       </Reveal>
     </>

@@ -1,6 +1,6 @@
 # HiveMind: Smart Onboarding Prototype
 
-Welcome to the guided sprint prototype for HiveMind. This project demonstrates a guided, personalized first 30 days experience for new hires at Northwind.
+Welcome to the guided sprint prototype for HiveMind. This project demonstrates a guided, personalized first 30 days experience for new hires.
 
 ## Product Thesis
 
@@ -55,6 +55,19 @@ If you are initializing a new project to support this architecture:
    ```bash
    npm install framer-motion @paper-design/shaders-react --legacy-peer-deps
    ```
+
+## Authentication
+
+There are two separate, unrelated sign in systems, do not confuse them:
+
+- **Member Sign In / Sign Up** (`src/screens/auth.tsx`, `src/state/member-context.tsx`): a new
+  starter's own account. Reachable from the "Sign In" button on the landing page header.
+  Accounts are mock, client side only (localStorage, plain text), there is no backend.
+- **Admin Login** (`src/screens/admin-login.tsx`, `src/state/auth-context.tsx`,
+  `src/lib/auth/jwt.ts`): a real signed HS256 JWT, checked and stored client side, gating the
+  full admin console (`src/screens/admin-dashboard.tsx`, `src/components/admin/`). Reachable
+  from the "Login" button on the landing page header, there is no admin tab in the main
+  navigation. Demo credentials are shown on the admin login screen itself.
 
 ## Motion and Interaction Design
 

@@ -34,7 +34,13 @@ const PROMISES = [
 ];
 
 export function Landing() {
-  const { dispatch } = useOnboarding();
+  const { state, dispatch } = useOnboarding();
+
+  // Dashboard has nothing to show without a role, send an unpersonalised
+  // visitor to the wizard first instead of a blank-looking "complete" screen.
+  function goToDashboard() {
+    dispatch({ type: 'go', view: state.role ? 'dashboard' : 'personalise' });
+  }
 
   return (
     <div className="relative w-full overflow-x-hidden">
@@ -42,7 +48,7 @@ export function Landing() {
       <div className="p-4 md:p-6 lg:p-8">
         <ShaderShowcase
           onStartClick={() => dispatch({ type: 'go', view: 'personalise' })}
-          onDashboardClick={() => dispatch({ type: 'go', view: 'dashboard' })}
+          onDashboardClick={goToDashboard}
           onAdminClick={() => dispatch({ type: 'go', view: 'admin' })}
           onSignInClick={() => dispatch({ type: 'go', view: 'auth' })}
         />

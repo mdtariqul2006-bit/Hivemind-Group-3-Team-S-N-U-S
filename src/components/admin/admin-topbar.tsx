@@ -6,8 +6,24 @@ import { useAuth } from '@/state/auth-context';
 import { useOnboarding } from '@/state/onboarding-context';
 import { easeOutFast } from '@/lib/motion';
 
+interface AdminTopbarProps {
+  title: string;
+  onMenu: () => void;
+  /** Current console-wide search text, controlled by the parent. */
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
+  /** Fired on Enter, jumps the parent to wherever that search should land. */
+  onSearchSubmit?: (value: string) => void;
+}
+
 /** Sticky header: menu trigger on mobile, search, theme toggle, and account menu. */
-export function AdminTopbar({ title, onMenu }: { title: string; onMenu: () => void }) {
+export function AdminTopbar({
+  title,
+  onMenu,
+  searchValue = '',
+  onSearchChange,
+  onSearchSubmit,
+}: AdminTopbarProps) {
   const { admin, logout } = useAuth();
   const { dispatch } = useOnboarding();
   const reduce = useReducedMotion();
@@ -28,13 +44,29 @@ export function AdminTopbar({ title, onMenu }: { title: string; onMenu: () => vo
 
         <h1 className="mr-auto truncate text-base font-semibold text-ink sm:text-lg">{title}</h1>
 
-        <label className="relative hidden items-center md:flex">
-          <Search className="pointer-events-none absolute left-3 h-4 w-4 text-muted" />
+        <form
+          role="search"
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSearchSubmit?.(searchValue);
+          }}
+          className="relative hidden items-center md:flex"
+        >
+          <Search aria-hidden className="pointer-events-none absolute left-3 h-4 w-4 text-muted" />
           <input
+            value={searchValue}
+            onChange={(e) => onSearchChange?.(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                onSearchSubmit?.(searchValue);
+              }
+            }}
             placeholder="Search console"
+            aria-label="Search console"
             className="h-10 w-56 rounded-full border border-border bg-surface pl-9 pr-4 text-sm text-ink placeholder:text-muted focus-visible:outline-2 focus-visible:outline-honey focus-visible:outline-offset-2"
           />
-        </label>
+        </form>
 
         <button
           aria-label="Notifications"

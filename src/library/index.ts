@@ -5,8 +5,6 @@
 
 export const ASSETS = {
   logo: '/library/images/logo-text-right.svg',
-  iconLogo: '/library/images/ico-logo.svg',
-  favicon: '/library/images/favicon.ico',
   structureLearning: '/library/images/structure-learning.jpg',
   usp1: '/library/images/usp-1.jpg',
   usp2: '/library/images/usp-2.png',
@@ -23,17 +21,6 @@ export const ASSETS = {
 } as const;
 
 export const HIVEMIND_RESEARCH = {
-  brand: {
-    name: 'HiveMind Academy',
-    tagline: 'Personalised onboarding and knowledge systems. Tailored to your organisation.',
-    subtagline: 'Making onboarding and knowledge feel clear, accessible and repeatable.',
-    colors: {
-      charcoal: '#383C42',
-      honey: '#FFC370',
-      pink: '#F4B8BD',
-      sage: '#BAC9C5',
-    },
-  },
   /**
    * The mission and positioning statements, adapted from the HiveMind Academy
    * organisational report (July 2026), sections 1 and 2. Phrased to match the
@@ -81,8 +68,6 @@ export const HIVEMIND_RESEARCH = {
       detail:
         'Through stakeholder interviews and systems reviews we surface the real pain behind knowledge silos, fragmented onboarding and compliance overload.',
       image: ASSETS.consult,
-      linkText: 'See Our Approach',
-      linkUrl: '/services',
     },
     {
       step: 2,
@@ -91,8 +76,6 @@ export const HIVEMIND_RESEARCH = {
       detail:
         'Every element is psychologically informed and aligned to your culture, your processes and the systems your teams already use.',
       image: ASSETS.discuss,
-      linkText: 'Learn More',
-      linkUrl: '/services#industry',
     },
     {
       step: 3,
@@ -101,8 +84,6 @@ export const HIVEMIND_RESEARCH = {
       detail:
         'We track time-to-productivity, engagement and user feedback, then keep refining. We stay involved as you scale.',
       image: ASSETS.delivery,
-      linkText: 'Book Your Free Call',
-      linkUrl: '/contact',
     },
   ],
   /**

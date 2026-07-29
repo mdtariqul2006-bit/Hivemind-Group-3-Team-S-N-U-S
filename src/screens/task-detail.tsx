@@ -51,6 +51,7 @@ export function TaskDetail({ task }: { task: Task }) {
       dispatch({ type: 'close-task' });
       return;
     }
+    if (justCompleted) return;
     // Let the confetti play, then collapse back to the dashboard.
     setJustCompleted(true);
     window.setTimeout(
@@ -223,6 +224,7 @@ export function TaskDetail({ task }: { task: Task }) {
             <div className="mt-8 flex justify-end">
               <Button
                 onClick={complete}
+                disabled={!done && justCompleted}
                 iconRight={done ? undefined : <Check className="h-5 w-5" strokeWidth={2.5} />}
               >
                 {done ? 'Back to your plan' : 'Mark complete'}

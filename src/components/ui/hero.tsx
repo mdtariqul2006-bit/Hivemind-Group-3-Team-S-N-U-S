@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useRef, useState } from "react"
+import { useRef } from "react"
 import { MeshGradient, PulsingBorder } from "@paper-design/shaders-react"
 import { motion, useReducedMotion } from "framer-motion"
 import { useTheme } from "@/hooks/use-theme"
@@ -16,28 +16,9 @@ interface ShaderShowcaseProps {
 
 export default function ShaderShowcase({ onStartClick, onDashboardClick, onAdminClick, onSignInClick }: ShaderShowcaseProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [, setIsActive] = useState(false)
   const { theme } = useTheme()
   const { user: member } = useMember()
   const reduce = useReducedMotion()
-
-  useEffect(() => {
-    const handleMouseEnter = () => setIsActive(true)
-    const handleMouseLeave = () => setIsActive(false)
-
-    const container = containerRef.current
-    if (container) {
-      container.addEventListener("mouseenter", handleMouseEnter)
-      container.addEventListener("mouseleave", handleMouseLeave)
-    }
-
-    return () => {
-      if (container) {
-        container.removeEventListener("mouseenter", handleMouseEnter)
-        container.removeEventListener("mouseleave", handleMouseLeave)
-      }
-    }
-  }, [])
 
   // HiveMind brand color palette adjusted for light/dark themes
   const meshColors = theme === "dark"
@@ -48,21 +29,9 @@ export default function ShaderShowcase({ onStartClick, onDashboardClick, onAdmin
 
   return (
     <div ref={containerRef} className="relative min-h-[90vh] overflow-hidden rounded-[2rem] border border-border bg-canvas/30 shadow-[var(--shadow-soft)]">
-      {/* SVG Filters for glowing, gooey, and glass effects */}
+      {/* SVG filter for the gooey button effect, the only one of this block actually used */}
       <svg className="absolute inset-0 w-0 h-0">
         <defs>
-          <filter id="glass-effect" x="-50%" y="-50%" width="200%" height="200%">
-            <feTurbulence baseFrequency="0.005" numOctaves="1" result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="0.3" />
-            <feColorMatrix
-              type="matrix"
-              values="1 0 0 0 0.02
-                      0 1 0 0 0.02
-                      0 0 1 0 0.05
-                      0 0 0 0.9 0"
-              result="tint"
-            />
-          </filter>
           <filter id="gooey-filter" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
             <feColorMatrix
@@ -72,25 +41,6 @@ export default function ShaderShowcase({ onStartClick, onDashboardClick, onAdmin
               result="gooey"
             />
             <feComposite in="SourceGraphic" in2="gooey" operator="atop" />
-          </filter>
-          <filter id="logo-glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-            <feMerge>
-              <feMergeNode in="coloredBlur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-          <linearGradient id="logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="var(--hm-honey)" />
-            <stop offset="50%" stopColor="#ffffff" />
-            <stop offset="100%" stopColor="var(--hm-pink)" />
-          </linearGradient>
-          <filter id="text-glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="2" result="coloredBlur" />
-            <feMerge>
-              <feMergeNode in="coloredBlur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
           </filter>
         </defs>
       </svg>

@@ -86,7 +86,9 @@ export function App() {
       <AnimatePresence>{openTask && <TaskDetail key="task" task={openTask} />}</AnimatePresence>
 
       {/* Milestone celebration, only when a phase was just completed. */}
-      {state.pendingCelebration && <Milestone phaseId={state.pendingCelebration} />}
+      <AnimatePresence>
+        {state.pendingCelebration && <Milestone key="milestone" phaseId={state.pendingCelebration} />}
+      </AnimatePresence>
 
       <ToastStack />
     </div>

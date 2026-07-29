@@ -14,8 +14,11 @@ function cubicBezierEase(t: number): number {
  */
 export function useCountUp(target: number, duration = 900): number {
   const reduce = useReducedMotion();
-  const [value, setValue] = useState(target);
-  const fromRef = useRef(target);
+  // Seed from 0, not target, so the first mount actually counts up rather than
+  // animating target to target. Later target changes still animate from the
+  // real previous value, since fromRef is only updated once a run completes.
+  const [value, setValue] = useState(0);
+  const fromRef = useRef(0);
   const rafRef = useRef(0);
 
   useEffect(() => {

@@ -11,9 +11,17 @@ const STATUS_TONE: Record<StarterRow['status'], { tone: 'honey' | 'pink' | 'sage
   'at-risk': { tone: 'pink', label: 'At risk' },
 };
 
+interface RosterTableProps {
+  /** Controlled from outside so the topbar console search can land here directly. */
+  query?: string;
+  onQueryChange?: (query: string) => void;
+}
+
 /** Searchable roster of new starters with progress and buddy matching. */
-export function RosterTable() {
-  const [query, setQuery] = useState('');
+export function RosterTable({ query: controlledQuery, onQueryChange }: RosterTableProps = {}) {
+  const [localQuery, setLocalQuery] = useState('');
+  const query = controlledQuery ?? localQuery;
+  const setQuery = onQueryChange ?? setLocalQuery;
 
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -34,11 +42,12 @@ export function RosterTable() {
           <p className="text-sm text-muted">{rows.length} people onboarding right now</p>
         </div>
         <label className="relative flex items-center">
-          <Search className="pointer-events-none absolute left-3 h-4 w-4 text-muted" />
+          <Search aria-hidden className="pointer-events-none absolute left-3 h-4 w-4 text-muted" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search people or teams"
+            aria-label="Search people or teams"
             className="h-10 w-full rounded-full border border-border bg-surface pl-9 pr-4 text-sm text-ink placeholder:text-muted focus-visible:outline-2 focus-visible:outline-honey focus-visible:outline-offset-2 sm:w-64"
           />
         </label>

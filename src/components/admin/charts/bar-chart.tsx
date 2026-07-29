@@ -35,9 +35,9 @@ export function BarChart({
                 whileInView={{ height: `${ratio * 100}%` }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
-                title={`${d.label}: ${d.value}`}
               />
             </div>
+            <span className="numeral text-[11px] font-medium text-ink">{d.value}</span>
             <span className="text-[11px] text-muted">{d.label}</span>
           </div>
         );
