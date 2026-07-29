@@ -1,12 +1,12 @@
 # HiveMind Academy Website Research & Audit Report
 
-This research document summarizes a comprehensive analysis of the official [HiveMind Academy](https://www.hivemindacademy.com/) website. It details the brand identity, content architecture, service offerings, visual assets, and UI contrast enhancements implemented for the 2026 cutting edge Smart Onboarding prototype.
+This document summarizes an analysis of the official [HiveMind Academy](https://www.hivemindacademy.com/) website. It covers the brand identity, content architecture, service offerings, visual assets, and the UI contrast work carried into the Smart Onboarding prototype.
 
 ---
 
 ## 1. Executive Summary & Brand Positioning
 
-HiveMind Academy provides **AI-powered onboarding and knowledge systems** tailored to growing organizations. Their core mission is converting fragmented documentation and ad-hoc onboarding into a structured, repeatable superpower.
+HiveMind Academy provides **AI-powered onboarding and knowledge systems** tailored to growing organizations. Their core mission is converting fragmented documentation and ad-hoc onboarding into a structured, repeatable system.
 
 ### Core Value Propositions
 * **Role Specific Personalisation**: Journeys mapped directly to real roles, tools, and workflows.
@@ -69,6 +69,6 @@ All official SVG logos and high-res imagery were downloaded directly from the li
 
 ### Solutions Implemented in Prototype
 1. **Glassmorphic Backing Panels**: Wrapped hero copy, subheadings, and badges in high-contrast frosted glass panels (`bg-surface/75 backdrop-blur-xl border border-border/80`).
-2. **Legibility Dropshadows & Contrast Pills**: Applied drop shadows (`drop-shadow-md`) and dark contrast pill badges (`bg-surface/20 border border-border/80`) to ensure 100% WCAG AAA readability regardless of animation state.
+2. **Legibility Dropshadows & Contrast Pills**: Applied drop shadows (`drop-shadow-md`) and dark contrast pill badges (`bg-surface/20 border border-border/80`), targeting WCAG AA contrast or better regardless of animation state.
 3. **Optimized Shader Speed & Opacity**: Dialed mesh gradient opacity to a subtle background layer (`opacity-25`) so text contrast remains crisp and static.
-4. **Custom 3D Interactive Card**: Added 3D tilt perspective previews with real-time glare highlights for an iPhone-level product launch feel.
+4. **Custom 3D Interactive Card**: Added 3D tilt perspective previews with real time glare highlights, giving product cards a glossy, tactile feel on hover.

@@ -1,57 +1,128 @@
-# HiveMind: Smart Onboarding Prototype
+# HiveMind: Smart Onboarding
 
-Welcome to the guided sprint prototype for HiveMind. This project demonstrates a guided, personalized first 30 days experience for new hires.
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?logo=tailwindcss&logoColor=white)
+![Status](https://img.shields.io/badge/status-in%20progress-yellow)
 
-## Product Thesis
+A guided, role specific onboarding prototype built for the HiveMind Academy Smart Onboarding brief. Built by Group 3, Team SNUS, Ravensbourne University London.
 
-New employees often experience an impersonal, document heavy onboarding process. Information is scattered, and there is little guidance on what to do first. 
+## About the project
 
-HiveMind solves this with:
-1. **A Guided Roadmap**: Tasks organized by Day 1, Week 1, and Month 1.
-2. **Role Specific Content**: Custom paths tailored for Designers, Engineers, and Marketers.
-3. **Micro learning Cards**: Small, digestible cards instead of long handbooks.
-4. **Visually Clear Progress**: The ProgressHive component tracks progress cell by cell.
-5. **Support Channels**: Manager and buddy details are always accessible.
+New hires often meet an onboarding process that is impersonal and document heavy, with information scattered across systems and little guidance on what to do first. This prototype is our answer: a guided roadmap for the first thirty days, content shaped around the new hire's actual role, and a visible, always current sense of progress.
 
-## Technical Architecture and Setup
+The prototype is built around Northwind, a fictional client used to ground the design in a concrete scenario, following the HiveMind Academy brief for a four week UX Product Discovery Sprint.
 
-This project uses React, TypeScript, and Tailwind CSS. It is structured to replicate modern standards like shadcn.
+### What is in the prototype
 
-### Shadcn and Directory Structure
+* A guided roadmap split into Day 1, Week 1, and Month 1.
+* Role specific content for designers, engineers, and marketers.
+* Micro learning cards in place of long handbooks.
+* A visible progress tracker, the ProgressHive component.
+* People and support screens, so a buddy, manager, or channel is always one tap away.
+* An interactive 3D onboarding guide and an admin console for reviewing onboarding metrics.
+* A landing page carrying the client's own research: brand mission, working process, and published insights, alongside the onboarding flow itself.
 
-We use a standard component structure where reusable primitives reside in `src/components/ui/` (such as the Button, Badge, Skeleton, and Shader elements), and page screens reside in `src/screens/`.
+## Team
 
-**Why the `/components/ui` folder is important:**
-- It separates layout components from design system primitives.
-- It enables shadcn CLI to easily add, update, and manage component code without conflicting with custom application logic.
-- It ensures a clean, predictable file hierarchy that external teams can immediately navigate.
+Group 3, Team SNUS, in partnership with HiveMind Academy.
 
-### Setup Instructions from Scratch
+| Name | Role |
+|---|---|
+| Kowshick Ahmed Abir | Project Lead |
+| Bushra Rimi | Documentation Lead |
+| Asan Limbu | UX Research Lead |
+| Anita Rahman | Technical/Feasibility Lead |
+| Tariqul Islam | UX/IA Designer |
+| Dip Mondal | UI/Prototype Designer |
 
-If you are initializing a new project to support this architecture:
+## Tech stack
 
-1. **Initialize TypeScript and Vite**:
+* React 19 with TypeScript
+* Vite 6
+* Tailwind CSS v4
+* Framer Motion and GSAP for animation
+* Spline for the interactive 3D onboarding guide
+
+## Getting started
+
+Requires Node.js 20 or later and npm.
+
+```bash
+git clone https://github.com/mdtariqul2006-bit/Hivemind-Group-3-Team-S-N-U-S.git
+cd Hivemind-Group-3-Team-S-N-U-S
+npm install
+npm run dev
+```
+
+Vite prints the local address to open, usually `http://localhost:5173`.
+
+| Script | What it does |
+|---|---|
+| `npm run dev` | Starts the local dev server with hot reload |
+| `npm run typecheck` | Runs the TypeScript project build with no output, type errors only |
+| `npm run build` | Runs the TypeScript build, then the production Vite build |
+| `npm run preview` | Serves the last production build locally |
+
+Both `npm run typecheck` and `npm run build` should pass with no errors before any commit. See [`claude.md`](claude.md) for the full set of conventions this project follows.
+
+## Project structure
+
+```
+src/
+  components/   Reusable UI primitives, layout, motion, and content blocks
+  screens/      One file per screen: landing, personalise, dashboard, people, documents, admin
+  state/        Onboarding and toast context
+  data/         Static content: roles, tasks, people, documents
+  library/      Client research content and downloaded brand assets
+  lib/          Formatting and small utility helpers
+  hooks/        Shared hooks: theme, scroll, debounced dimensions
+  styles/       Design tokens and global CSS
+```
+
+The rest of the repository holds the coursework evidence pack. Each folder below has its own README explaining what goes there and who owns it.
+
+| Folder | Contents |
+|---|---|
+| [`docs/`](docs) | Decisions log, hypotheses, research plan, and success metrics |
+| [`research/`](research) | Interview transcripts, notes, and synthesis |
+| [`design/`](design) | Journey maps, wireframes, and exported screens |
+| [`delivery/`](delivery) | The Week 4 validation report |
+| [`testing/`](testing) | Critical user tasks and the usability test script |
+| [`tech/`](tech) | What the React and shadcn/ui prototype stretch goal covers, points back to `src/` |
+
+## Design system and motion
+
+Reusable primitives live in `src/components/ui/`, page screens live in `src/screens/`, and content blocks assembled from research live in `src/components/blocks/`. Keeping primitives separate from page logic means design system updates do not collide with feature work.
+
+The interface leans on a small set of motion patterns rather than one off animation:
+
+* A WebGL shader hero (`MeshGradient`, `PulsingBorder`) for the landing page.
+* A conic border glow (`GlowingEffect`) that tracks the cursor on cards.
+* Slow moving gradient blobs and floating vector paths behind content sections.
+* A shared `Reveal` component that fades and rises content into view on scroll.
+
+Every motion component checks `prefers-reduced-motion` and falls back to a plain fade with no translation when it is set.
+
+### Stack reference
+
+The setup below is not needed to run this repository. It is kept as a reference for how the stack was assembled, in case the team scaffolds a similar project again.
+
+1. Scaffold Vite with the React and TypeScript template:
    ```bash
    npm create vite@latest my-app -- --template react-ts
-   cd my-app
    ```
-
-2. **Install Tailwind CSS**:
-   Follow Tailwind guidelines for Vite integration. For Tailwind v4:
+2. Add Tailwind CSS v4:
    ```bash
    npm install tailwindcss @tailwindcss/vite
    ```
-   Add the Tailwind plugin to `vite.config.ts`.
-
-3. **Initialize Shadcn CLI**:
-   Run the CLI init command to set up component paths:
+   Then add the Tailwind plugin to `vite.config.ts`.
+3. Initialise shadcn/ui, choosing `src/components/ui` as the primitives path and `@/*` as the import alias:
    ```bash
    npx shadcn@latest init
    ```
-   During setup, choose the `/components/ui` path for component primitives and configure your import aliases (such as `@/*`).
-
-4. **Install Shader and Motion Dependencies**:
-   Install Framer Motion and Paper Design Shaders:
+4. Add the animation dependencies:
    ```bash
    npm install framer-motion @paper-design/shaders-react --legacy-peer-deps
    ```
@@ -69,12 +140,6 @@ There are two separate, unrelated sign in systems, do not confuse them:
   from the "Login" button on the landing page header, there is no admin tab in the main
   navigation. Demo credentials are shown on the admin login screen itself.
 
-## Motion and Interaction Design
+## Course context
 
-Our animations are crafted to feel premium, responsive, and natural.
-
-1. **Shader Showcases**: The welcome screen uses a high performance WebGL `MeshGradient` and `PulsingBorder` to create an ambient, organic field.
-2. **Conic Border Glows**: Cards use the `GlowingEffect` to draw a subtle conic border gradient that tracks the user's cursor.
-3. **Drifting Gradients**: Behind content sections, slow moving color circles add depth.
-4. **Vector Path Waves**: The background features floating mathematical waves that animate slowly over time.
-5. **Reduced Motion**: We respect user preferences for reduced motion. All complex animations are disabled if `prefers-reduced-motion` is active.
+Built for the HiveMind x Ravensbourne Product Discovery Sprint, a four week UX module at Ravensbourne University London, in partnership with HiveMind Academy.
