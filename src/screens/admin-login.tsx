@@ -25,12 +25,20 @@ export function AdminLogin() {
     e.preventDefault();
     setError(null);
     setBusy(true);
-    // A short pause so the pending state is visible, this stands in for a
-    // network round trip that a real login would make.
-    await new Promise((r) => setTimeout(r, 450));
-    const result = await login(email, password);
-    setBusy(false);
-    if (!result.ok) setError(result.error);
+    try {
+      // A short pause so the pending state is visible, this stands in for a
+      // network round trip that a real login would make.
+      await new Promise((r) => setTimeout(r, 450));
+      const result = await login(email, password);
+      if (!result.ok) setError(result.error);
+    } catch (err) {
+      console.error('Admin login failed:', err);
+      setError('Something went wrong signing in. Please try again.');
+    } finally {
+      // Always clears. Previously a throw here left the button disabled on
+      // "Verifying" with no message and no way to retry short of a reload.
+      setBusy(false);
+    }
   }
 
   function fillDemo() {
