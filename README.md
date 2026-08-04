@@ -14,11 +14,12 @@ New hires often meet an onboarding process that is impersonal and document heavy
 
 The prototype is built around Northwind, a fictional client used to ground the design in a concrete scenario, following the HiveMind Academy brief for a four week UX Product Discovery Sprint.
 
-> **Next up:** the onboarding assistant, a small local Q&A widget, is scaffolded but not
-> yet built. Read [`docs/onboarding-assistant-spec.md`](docs/onboarding-assistant-spec.md)
-> in full before starting on it, whether you are a teammate or another Claude session
-> picking this up, it has the architecture, file plan, and the reasoning behind why this
-> is not a wired up LLM.
+> **The onboarding assistant** is live: a small local Q&A widget, bottom right, docks
+> after you scroll past the 3D robot guide. Deliberately not an LLM, see
+> [`docs/onboarding-assistant-spec.md`](docs/onboarding-assistant-spec.md) for the full
+> reasoning and architecture. Its knowledge base (`src/lib/assistant/knowledge-base.ts`)
+> still only covers structural questions, growing it from real usability testing notes is
+> open work, read the spec's status line before picking that up.
 
 ### What is in the prototype
 
@@ -28,6 +29,8 @@ The prototype is built around Northwind, a fictional client used to ground the d
 * A visible progress tracker, the ProgressHive component.
 * People and support screens, so a buddy, manager, or channel is always one tap away.
 * An interactive 3D onboarding guide and an admin console for reviewing onboarding metrics.
+* A local, non-LLM onboarding assistant docked bottom right, answering a small set of real
+  questions with its reasoning always shown, see `docs/onboarding-assistant-spec.md`.
 * A landing page carrying the client's own research: brand mission, working process, and published insights, alongside the onboarding flow itself.
 
 ## Team
