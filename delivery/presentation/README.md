@@ -1,7 +1,10 @@
 # Presentation
 
 The final HiveMind WBL presentation deck goes here (PPTX or a PDF export),
-plus any supporting screenshots used in it.
+plus any supporting screenshots used in it. [`outline.md`](outline.md) is the
+working skeleton while the deck is being built, see also
+[`docs/presentation-guideline.md`](../../docs/presentation-guideline.md) for
+the fuller content plan and brand reference.
 
 Per the tutor's Week 4 instructions, the deck needs a clear slide or section
 on validation, testing, and success metrics, not just the prototype. Pull
