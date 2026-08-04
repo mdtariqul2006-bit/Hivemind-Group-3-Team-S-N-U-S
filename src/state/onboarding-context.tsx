@@ -18,7 +18,7 @@ import type {
 } from '@/types';
 import { PHASES } from '@/data/roles';
 import { tasksForRole } from '@/data/tasks';
-import { clearPersistedState, loadPersistedState, savePersistedState } from '@/lib/storage';
+import { loadPersistedState, savePersistedState } from '@/lib/storage';
 import { routeFromHash } from '@/hooks/use-history-sync';
 
 /** Views that render nothing meaningful until a role has been picked. */
@@ -130,10 +130,12 @@ export function reducer(state: OnboardingState, action: Action): OnboardingState
           ? [...state.celebratedPhases, state.pendingCelebration]
           : state.celebratedPhases,
       };
-    case 'reset': {
-      clearPersistedState();
+    case 'reset':
+      // No storage call here on purpose. Reducers must stay pure (React 19
+      // StrictMode double invokes them), and the persistence effect below
+      // writes the reset state straight back anyway, so clearing was both
+      // impure and redundant.
       return { ...initialState, startDate: state.startDate };
-    }
     default:
       return state;
   }

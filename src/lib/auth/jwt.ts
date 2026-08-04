@@ -1,18 +1,31 @@
 import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
 
 /**
- * Production-ready JWT authentication helper module.
- * 
- * Supports Web Crypto API signed HS256 tokens with dynamic environment configuration,
- * secure expiration parameters, role enforcement, and token validation.
+ * Client side JWT helper for the admin console demo.
+ *
+ * These are genuine HS256 tokens: really signed, really verified, with a real
+ * two hour expiry that the app enforces. What they are not is a security
+ * boundary. There is no backend in this project, so the signing secret has to
+ * ship inside the browser bundle (anything prefixed VITE_ is inlined at build
+ * time). Anyone can read it from the built JavaScript and mint their own
+ * admin token, regardless of what the secret's value is.
+ *
+ * That trade is deliberate for a coursework prototype whose goal is to show
+ * the full JWT flow end to end: issue, store, verify, expire, and gate a
+ * route. Do not treat this as protecting anything real. A production version
+ * moves signing behind a server that keeps the secret private.
+ *
+ * There is no hardcoded fallback secret, VITE_JWT_SECRET must be set (see
+ * .env.example). This throws if it is missing, callers must catch it,
+ * see login() in state/auth-context.tsx for the pattern.
  */
 
 function getSecretKey(): Uint8Array {
   const secretEnv = import.meta.env.VITE_JWT_SECRET;
-  if (!secretEnv && import.meta.env.PROD) {
-    throw new Error('VITE_JWT_SECRET environment variable is missing in production environment');
+  if (!secretEnv) {
+    throw new Error('VITE_JWT_SECRET is required for admin JWT signing');
   }
-  return new TextEncoder().encode(secretEnv ?? 'hivemind-academy-production-secure-key-2026');
+  return new TextEncoder().encode(secretEnv);
 }
 
 const ISSUER = 'hivemind-academy';

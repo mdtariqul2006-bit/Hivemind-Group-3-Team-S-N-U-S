@@ -15,18 +15,19 @@ interface RosterTableProps {
   /** Controlled from outside so the topbar console search can land here directly. */
   query?: string;
   onQueryChange?: (query: string) => void;
+  items?: StarterRow[];
 }
 
 /** Searchable roster of new starters with progress and buddy matching. */
-export function RosterTable({ query: controlledQuery, onQueryChange }: RosterTableProps = {}) {
+export function RosterTable({ query: controlledQuery, onQueryChange, items = STARTERS }: RosterTableProps = {}) {
   const [localQuery, setLocalQuery] = useState('');
   const query = controlledQuery ?? localQuery;
   const setQuery = onQueryChange ?? setLocalQuery;
 
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return STARTERS;
-    return STARTERS.filter(
+    if (!q) return items;
+    return items.filter(
       (s) =>
         s.name.toLowerCase().includes(q) ||
         s.role.toLowerCase().includes(q) ||

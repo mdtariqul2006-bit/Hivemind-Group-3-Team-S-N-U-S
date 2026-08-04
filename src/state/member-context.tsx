@@ -5,6 +5,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import { safeGetItem, safeRemoveItem, safeSetItem } from '@/lib/storage';
 
 export interface MemberUser {
   email: string;
@@ -20,10 +21,26 @@ type AuthResult = { ok: true } | { ok: false; error: string };
 const USER_KEY = 'hm-member-user';
 const ACCOUNTS_KEY = 'hm-member-accounts';
 
+/**
+ * Both loaders validate the parsed shape instead of casting it. A successful
+ * JSON.parse says nothing about the contents, so stored data of the wrong
+ * shape (an older schema, or hand edited storage) used to slip through the
+ * cast and then blow up at the call site: `{}` parses fine, and the resulting
+ * object has no .find, which crashed the app on the sign in click.
+ */
+function isStoredAccount(value: unknown): value is StoredAccount {
+  if (typeof value !== 'object' || value === null) return false;
+  const account = value as Record<string, unknown>;
+  return typeof account.email === 'string' && typeof account.password === 'string';
+}
+
 function loadAccounts(): StoredAccount[] {
   try {
-    const raw = localStorage.getItem(ACCOUNTS_KEY);
-    return raw ? (JSON.parse(raw) as StoredAccount[]) : [];
+    const raw = safeGetItem(ACCOUNTS_KEY);
+    if (!raw) return [];
+    const parsed: unknown = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(isStoredAccount);
   } catch {
     return [];
   }
@@ -31,8 +48,12 @@ function loadAccounts(): StoredAccount[] {
 
 function loadUser(): MemberUser | null {
   try {
-    const raw = localStorage.getItem(USER_KEY);
-    return raw ? (JSON.parse(raw) as MemberUser) : null;
+    const raw = safeGetItem(USER_KEY);
+    if (!raw) return null;
+    const parsed: unknown = JSON.parse(raw);
+    if (typeof parsed !== 'object' || parsed === null) return null;
+    const { email } = parsed as Record<string, unknown>;
+    return typeof email === 'string' && email ? { email } : null;
   } catch {
     return null;
   }
@@ -57,8 +78,11 @@ export function MemberProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<MemberUser | null>(() => loadUser());
 
   useEffect(() => {
-    if (user) localStorage.setItem(USER_KEY, JSON.stringify(user));
-    else localStorage.removeItem(USER_KEY);
+    // Guarded: an unhandled throw in an effect unmounts the React tree, so a
+    // full quota or blocked storage used to crash the app immediately after a
+    // successful signup.
+    if (user) safeSetItem(USER_KEY, JSON.stringify(user));
+    else safeRemoveItem(USER_KEY);
   }, [user]);
 
   function signIn(email: string, password: string): AuthResult {
@@ -84,7 +108,14 @@ export function MemberProvider({ children }: { children: ReactNode }) {
       return { ok: false, error: 'An account with that email already exists. Try signing in.' };
     }
     const account: StoredAccount = { email: normalized, password };
-    localStorage.setItem(ACCOUNTS_KEY, JSON.stringify([...accounts, account]));
+    if (!safeSetItem(ACCOUNTS_KEY, JSON.stringify([...accounts, account]))) {
+      // Without a durable account record the user could sign in now and be
+      // unable to sign in again later, which is more confusing than failing here.
+      return {
+        ok: false,
+        error: 'Could not save your account. Check your browser storage settings and try again.',
+      };
+    }
     setUser({ email: account.email });
     return { ok: true };
   }
