@@ -1,11 +1,15 @@
 # Onboarding assistant: feature spec
 
-Scaffold for a future sprint, not yet implemented. Written so any team member or
-any Claude session picking this up later has the full context without re-deriving
-it. If you are starting this feature, read this whole file first, then update it
-as decisions change, it is meant to stay current, not to be a one-time proposal.
+Written so any team member or any Claude session picking this up has the full
+context without re-deriving it. It is meant to stay current, not to be a
+one-time proposal, keep it updated as decisions change.
 
-Status: **scaffolded, not started.** Target: the sprint after Week 4 validation.
+Status: **section 9's "next sprint" scope is built** (`src/components/assistant/`,
+`src/lib/assistant/`, `src/state/assistant-context.tsx`). The knowledge base
+currently has structural entries only (section 6.1 and 6.2), section 6.3, mining
+real usability session notes for content, is still open. See the code itself for
+what actually shipped, this file is the design record, not living documentation
+of the current knowledge base entries.
 
 ---
 
