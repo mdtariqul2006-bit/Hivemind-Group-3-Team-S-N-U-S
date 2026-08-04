@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { PEOPLE } from '@/data/people';
 import { useOnboarding } from '@/state/onboarding-context';
+import { useToast } from '@/state/toast-context';
 import { Avatar } from '@/components/ui/avatar';
 import { EASE_OUT } from '@/lib/motion';
 
@@ -13,6 +14,7 @@ import { EASE_OUT } from '@/lib/motion';
 export function PeopleRail() {
   const reduce = useReducedMotion();
   const { dispatch } = useOnboarding();
+  const { push } = useToast();
   const shortlist = PEOPLE.slice(0, 4);
 
   return (
@@ -34,7 +36,16 @@ export function PeopleRail() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4, ease: EASE_OUT, delay: 0.05 * i }}
           >
-            <button className="flex w-full items-center gap-3 rounded-2xl p-2 text-left transition-colors hover:bg-sunk">
+            <button
+              onClick={() =>
+                push(
+                  p.relationship === 'channel'
+                    ? `Opening ${p.name}…`
+                    : `Message sent to ${p.name.split(' ')[0]}. They usually reply within a day.`,
+                )
+              }
+              className="flex w-full items-center gap-3 rounded-2xl p-2 text-left transition-colors hover:bg-sunk"
+            >
               <Avatar initials={p.initials} accent={p.accent} presence={p.presence} size={40} />
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-sm font-medium text-ink">{p.name}</span>

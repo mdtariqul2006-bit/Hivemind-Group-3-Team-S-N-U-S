@@ -9,13 +9,19 @@ import { HexFrame } from '@/components/ui/hex-frame';
 import { Reveal, RevealGroup, RevealItem } from '@/components/motion/reveal';
 import type { View } from '@/types';
 
+/**
+ * Each card either navigates to a real screen or fires a real support action.
+ * All three used to dispatch `view: 'documents'`, so "Get help" and "See links"
+ * both silently dropped you on the document library.
+ */
 const RESOURCES: {
   icon: typeof BookOpen;
   accent: 'sage' | 'pink' | 'honey';
   title: string;
   body: string;
   action: string;
-  view: View;
+  /** Where the card goes, or the channel it opens. */
+  target: { kind: 'view'; view: View } | { kind: 'channel'; channel: string };
 }[] = [
   {
     icon: BookOpen,
@@ -23,15 +29,15 @@ const RESOURCES: {
     title: 'Key documents',
     body: 'Ways of working, the design system, every doc you’ll be pointed to. Searchable, and mostly up to date.',
     action: 'Browse documents',
-    view: 'documents',
+    target: { kind: 'view', view: 'documents' },
   },
   {
     icon: LifeBuoy,
     accent: 'pink',
     title: 'IT and access help',
-    body: 'Laptop playing up, missing access to a tool, badge not working? This is the fastest way to a fix.',
-    action: 'Get help',
-    view: 'documents',
+    body: 'Laptop playing up, missing access to a tool, badge not working? Ask in the channel, someone picks it up fast.',
+    action: 'Ask for help',
+    target: { kind: 'channel', channel: '#ask-northwind' },
   },
   {
     icon: Link2,
@@ -39,7 +45,7 @@ const RESOURCES: {
     title: 'Key links, one place',
     body: 'Payroll, benefits, the holiday tracker and the org chart. The handful of links you’ll actually reuse.',
     action: 'See links',
-    view: 'documents',
+    target: { kind: 'view', view: 'documents' },
   },
 ];
 
@@ -123,7 +129,11 @@ export function People() {
             <h3 className="mt-4 font-semibold text-ink">{r.title}</h3>
             <p className="mt-1.5 text-sm text-muted">{r.body}</p>
             <button
-              onClick={() => dispatch({ type: 'go', view: r.view })}
+              onClick={() =>
+                r.target.kind === 'view'
+                  ? dispatch({ type: 'go', view: r.target.view })
+                  : push(`Opening ${r.target.channel}…`)
+              }
               className="mt-4 text-sm font-medium text-honey-deep"
             >
               {r.action} →

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Menu, Search, Bell, LogOut, ArrowLeftRight } from 'lucide-react';
 import { ThemeToggle } from '@/components/layout/theme-toggle';
@@ -14,6 +14,8 @@ interface AdminTopbarProps {
   onSearchChange?: (value: string) => void;
   /** Fired on Enter, jumps the parent to wherever that search should land. */
   onSearchSubmit?: (value: string) => void;
+  /** Takes the admin to the section holding the recent activity feed. */
+  onNotificationsClick?: () => void;
 }
 
 /** Sticky header: menu trigger on mobile, search, theme toggle, and account menu. */
@@ -23,11 +25,28 @@ export function AdminTopbar({
   searchValue = '',
   onSearchChange,
   onSearchSubmit,
+  onNotificationsClick,
 }: AdminTopbarProps) {
   const { admin, logout } = useAuth();
-  const { dispatch } = useOnboarding();
+  const { state, dispatch } = useOnboarding();
   const reduce = useReducedMotion();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // The click-outside overlay lives inside this sticky header, which is its own
+  // stacking context, so it can never sit above the z-50 sidebar. Closing on
+  // section change covers the sidebar case, and Escape covers the keyboard one.
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [title]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [menuOpen]);
 
   const initials = admin?.name.split(' ').map((p) => p[0]).join('') ?? 'A';
 
@@ -69,8 +88,9 @@ export function AdminTopbar({
         </form>
 
         <button
-          aria-label="Notifications"
-          className="relative grid h-10 w-10 place-items-center rounded-full border border-border bg-surface text-ink hover:bg-sunk"
+          onClick={onNotificationsClick}
+          aria-label="Notifications, view recent activity"
+          className="relative grid h-10 w-10 place-items-center rounded-full border border-border bg-surface text-ink transition-colors hover:bg-sunk focus-visible:outline-2 focus-visible:outline-honey focus-visible:outline-offset-2"
         >
           <Bell className="h-4.5 w-4.5" />
           <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-honey ring-2 ring-[color:var(--hm-surface)]" />
@@ -114,7 +134,10 @@ export function AdminTopbar({
                     role="menuitem"
                     onClick={() => {
                       setMenuOpen(false);
-                      dispatch({ type: 'go', view: 'dashboard' });
+                      // The dashboard is an empty shell without a role, so an
+                      // admin who has never set one up goes to the wizard,
+                      // matching the guard the landing hero already uses.
+                      dispatch({ type: 'go', view: state.role ? 'dashboard' : 'personalise' });
                     }}
                     className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-ink transition-colors hover:bg-sunk"
                   >
@@ -123,7 +146,13 @@ export function AdminTopbar({
                   </button>
                   <button
                     role="menuitem"
-                    onClick={logout}
+                    onClick={() => {
+                      setMenuOpen(false);
+                      logout();
+                      // Without this the view stays 'admin' and app.tsx falls
+                      // straight through to the admin login form.
+                      dispatch({ type: 'go', view: 'landing' });
+                    }}
                     className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-ink transition-colors hover:bg-sunk"
                   >
                     <LogOut className="h-4 w-4 text-muted" />

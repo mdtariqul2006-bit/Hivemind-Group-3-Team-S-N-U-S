@@ -30,7 +30,9 @@ export function TopBar({ title }: { title?: string }) {
 
   function handleSignOut() {
     signOut();
-    dispatch({ type: 'go', view: 'landing' });
+    // Clear the onboarding plan too, otherwise the next person to sign up on
+    // this browser inherits the previous starter's role and completed tasks.
+    dispatch({ type: 'reset' });
   }
 
   return (

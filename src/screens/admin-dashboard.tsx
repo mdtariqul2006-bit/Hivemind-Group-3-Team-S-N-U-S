@@ -65,6 +65,7 @@ export function AdminDashboard() {
           searchValue={starterQuery}
           onSearchChange={setStarterQuery}
           onSearchSubmit={() => setSection('starters')}
+          onNotificationsClick={() => setSection('overview')}
         />
 
         <div className="px-4 py-6 sm:px-6 lg:px-8">

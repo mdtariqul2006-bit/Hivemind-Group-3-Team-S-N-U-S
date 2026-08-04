@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { LogoMark } from '@/components/ui/logo';
 import { useAuth } from '@/state/auth-context';
+import { useOnboarding } from '@/state/onboarding-context';
 import { springSoft } from '@/lib/motion';
 import { cn } from '@/lib/cn';
 
@@ -79,8 +80,11 @@ export function AdminSidebar({ active, onSelect, open, onClose }: SidebarProps) 
           open ? 'translate-x-0' : '-translate-x-full',
         )}
       >
-        <div className="flex h-full flex-col">
-          <div className="flex items-center justify-between px-5 py-5">
+        {/* overflow-y-auto so the account block and Sign out at the bottom stay
+            reachable on short viewports (landscape phone, or a short window),
+            where the roughly 440px of content would otherwise be clipped. */}
+        <div className="flex h-full flex-col overflow-y-auto">
+          <div className="flex shrink-0 items-center justify-between px-5 py-5">
             <span className="flex items-center gap-2.5">
               <LogoMark size={30} />
               <span className="text-base font-semibold tracking-tight text-ink">HiveMind</span>
@@ -94,7 +98,7 @@ export function AdminSidebar({ active, onSelect, open, onClose }: SidebarProps) 
             </button>
           </div>
 
-          <span className="mx-5 mb-2 text-[11px] uppercase tracking-wider text-muted">Console</span>
+          <span className="mx-5 mb-2 shrink-0 text-[11px] uppercase tracking-wider text-muted">Console</span>
 
           <nav className="flex-1 px-3">
             <ul className="grid gap-1">
@@ -136,10 +140,18 @@ export function AdminSidebar({ active, onSelect, open, onClose }: SidebarProps) 
 
 function SidebarFooter() {
   const { admin, logout } = useAuth();
+  const { dispatch } = useOnboarding();
   const reduce = useReducedMotion();
 
+  function handleSignOut() {
+    logout();
+    // Without this the view stays 'admin' and app.tsx falls straight through
+    // to the admin login form instead of returning to the site.
+    dispatch({ type: 'go', view: 'landing' });
+  }
+
   return (
-    <div className="border-t border-border p-3">
+    <div className="shrink-0 border-t border-border p-3">
       <div className="mb-2 flex items-center gap-3 rounded-2xl bg-sunk px-3 py-2.5">
         <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full gradient-hm text-xs font-semibold text-charcoal">
           {admin?.name.split(' ').map((p) => p[0]).join('') ?? 'A'}
@@ -150,7 +162,7 @@ function SidebarFooter() {
         </span>
       </div>
       <motion.button
-        onClick={logout}
+        onClick={handleSignOut}
         whileTap={reduce ? undefined : { scale: 0.97 }}
         className="flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium text-muted transition-colors hover:bg-sunk hover:text-ink"
       >

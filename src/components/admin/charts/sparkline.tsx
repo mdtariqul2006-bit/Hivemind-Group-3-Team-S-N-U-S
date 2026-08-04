@@ -33,7 +33,16 @@ export function Sparkline({
   const stroke = ACCENTS[accent];
 
   return (
-    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
+    // No fixed pixel width: the viewBox keeps the aspect ratio while w-full lets
+    // the line shrink with its card. A hard width clipped the most recent point
+    // inside the overflow-hidden stat card at common laptop widths.
+    <svg
+      viewBox={`0 0 ${width} ${height}`}
+      width="100%"
+      height={height}
+      preserveAspectRatio="none"
+      className="block w-full"
+    >
       <defs>
         <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={stroke} stopOpacity="0.28" />

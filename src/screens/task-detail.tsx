@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Check, Info, Users } from 'lucide-react';
 import { useOnboarding } from '@/state/onboarding-context';
@@ -36,6 +36,16 @@ export function TaskDetail({ task }: { task: Task }) {
 
   const [cardIndex, setCardIndex] = useState(0);
   const [justCompleted, setJustCompleted] = useState(false);
+  const completeTimer = useRef<number | null>(null);
+
+  // Backing out during the confetti delay used to leave the timer running, so
+  // the toast and the milestone modal fired over the dashboard after the user
+  // had already left the task.
+  useEffect(() => {
+    return () => {
+      if (completeTimer.current !== null) window.clearTimeout(completeTimer.current);
+    };
+  }, []);
 
   const Icon = taskIcon(task.icon);
   const checked = state.checkedItems[task.id] ?? [];
@@ -54,8 +64,9 @@ export function TaskDetail({ task }: { task: Task }) {
     if (justCompleted) return;
     // Let the confetti play, then collapse back to the dashboard.
     setJustCompleted(true);
-    window.setTimeout(
+    completeTimer.current = window.setTimeout(
       () => {
+        completeTimer.current = null;
         dispatch({ type: 'complete-task', task });
         push(`Nice work. “${task.title}” is done.`);
       },
