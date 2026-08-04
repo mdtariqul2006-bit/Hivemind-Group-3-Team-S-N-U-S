@@ -108,13 +108,19 @@ export function reducer(state: OnboardingState, action: Action): OnboardingState
         completedTaskIds,
         openTaskId: null,
         pendingCelebration: pending,
-        celebratedPhases: pending
-          ? [...state.celebratedPhases, pending]
-          : state.celebratedPhases,
       };
     }
     case 'dismiss-celebration':
-      return { ...state, pendingCelebration: null };
+      // A phase counts as celebrated once the modal has actually been seen and
+      // dismissed. Recording it at completion time meant a reload while the
+      // modal was open lost that phase's celebration permanently.
+      return {
+        ...state,
+        pendingCelebration: null,
+        celebratedPhases: state.pendingCelebration
+          ? [...state.celebratedPhases, state.pendingCelebration]
+          : state.celebratedPhases,
+      };
     case 'reset': {
       clearPersistedState();
       return { ...initialState, startDate: state.startDate };
@@ -134,7 +140,16 @@ interface OnboardingContextValue {
 const OnboardingContext = createContext<OnboardingContextValue | null>(null);
 
 export function OnboardingProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(reducer, initialState, (init) => loadPersistedState(init));
+  const [state, dispatch] = useReducer(reducer, initialState, (init) => {
+    const restored = loadPersistedState(init);
+    // Re-arm a celebration that was on screen when the page was reloaded.
+    // celebratedPhases is only written on dismissal, so an undismissed phase
+    // is still eligible here and the milestone is not lost.
+    const pending = restored.role
+      ? phaseNewlyComplete(restored.role, restored.completedTaskIds, restored.celebratedPhases)
+      : null;
+    return { ...restored, pendingCelebration: pending };
+  });
 
   useEffect(() => {
     savePersistedState(state);

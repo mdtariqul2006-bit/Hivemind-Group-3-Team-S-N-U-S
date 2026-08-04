@@ -15,14 +15,29 @@ import { Reveal } from '@/components/motion/reveal';
 import { settledLine, formatMinutes } from '@/lib/format';
 import { EASE_OUT } from '@/lib/motion';
 
+/**
+ * Module scoped so the seeded skeleton plays once per page load rather than
+ * on every return to this screen. app.tsx keys its view transition on
+ * state.view, so Dashboard remounts each time you come back from People or
+ * Documents, which replayed the skeleton every single time.
+ */
+let hasShownSkeleton = false;
+
 export function Dashboard() {
   const { state, dispatch, tasks, progress } = useOnboarding();
   const reduce = useReducedMotion();
 
-  // A brief seeded "load" so the skeleton state is real and reviewers see it once.
-  const [loading, setLoading] = useState(true);
+  // A brief seeded "load" so the skeleton state is real and reviewers see it
+  // once. The screen remounts on every navigation back here (app.tsx keys the
+  // view transition), so this is gated on a module flag, otherwise the
+  // skeleton flashes again every time you return from People or Documents.
+  const [loading, setLoading] = useState(!hasShownSkeleton);
   useEffect(() => {
-    const t = setTimeout(() => setLoading(false), reduce ? 200 : 750);
+    if (hasShownSkeleton) return;
+    const t = setTimeout(() => {
+      hasShownSkeleton = true;
+      setLoading(false);
+    }, reduce ? 200 : 750);
     return () => clearTimeout(t);
   }, [reduce]);
 

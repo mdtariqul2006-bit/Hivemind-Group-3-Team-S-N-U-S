@@ -5,16 +5,17 @@ import { motion, useReducedMotion } from "framer-motion"
 import { useTheme } from "@/hooks/use-theme"
 import { useMember } from "@/state/member-context"
 import { Wordmark } from "@/components/ui/logo"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, LogIn, ShieldCheck } from "lucide-react"
 
 interface ShaderShowcaseProps {
+  onLogoClick?: () => void
   onStartClick?: () => void
   onDashboardClick?: () => void
   onAdminClick?: () => void
   onSignInClick?: () => void
 }
 
-export default function ShaderShowcase({ onStartClick, onDashboardClick, onAdminClick, onSignInClick }: ShaderShowcaseProps) {
+export default function ShaderShowcase({ onLogoClick, onStartClick, onDashboardClick, onAdminClick, onSignInClick }: ShaderShowcaseProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const { theme } = useTheme()
   const { user: member } = useMember()
@@ -64,20 +65,24 @@ export default function ShaderShowcase({ onStartClick, onDashboardClick, onAdmin
       {/* Hero Content Overlay */}
       <div className="relative z-10 flex flex-col justify-between min-h-[90vh] p-6 sm:p-10 lg:p-14">
         <header className="flex items-center justify-between w-full">
-          <motion.div
+          <motion.button
+            type="button"
+            onClick={onLogoClick}
+            aria-label="HiveMind home"
             className="flex items-center group cursor-pointer"
             whileHover={{ scale: 1.03 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
             <Wordmark size={40} />
-          </motion.div>
+          </motion.button>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
             {!member && onSignInClick && (
               <button
                 onClick={onSignInClick}
-                className="px-4 py-2 rounded-full bg-surface/80 border border-border text-ink font-semibold text-xs transition-all duration-300 hover:bg-sunk cursor-pointer shadow-sm backdrop-blur-md"
+                className="group inline-flex h-9 items-center gap-1.5 rounded-full border border-border/70 bg-surface/70 px-4 text-xs font-semibold text-ink shadow-sm backdrop-blur-md transition-all duration-300 hover:border-honey/50 hover:bg-surface/95 hover:shadow-md cursor-pointer"
               >
+                <LogIn className="h-3.5 w-3.5 text-muted transition-colors group-hover:text-honey-deep" />
                 Sign In
               </button>
             )}
@@ -87,9 +92,10 @@ export default function ShaderShowcase({ onStartClick, onDashboardClick, onAdmin
             {onAdminClick && (
               <button
                 onClick={onAdminClick}
-                className="px-4 py-2 rounded-full bg-surface/80 border border-border text-ink font-semibold text-xs transition-all duration-300 hover:bg-sunk cursor-pointer shadow-sm backdrop-blur-md flex items-center gap-1.5"
+                className="group inline-flex h-9 items-center gap-1.5 rounded-full border border-border/70 bg-surface/70 px-4 text-xs font-semibold text-ink shadow-sm backdrop-blur-md transition-all duration-300 hover:border-honey/50 hover:bg-surface/95 hover:shadow-md cursor-pointer"
               >
-                <span>🛡️</span> Login
+                <ShieldCheck className="h-3.5 w-3.5 text-muted transition-colors group-hover:text-honey-deep" />
+                Login
               </button>
             )}
 
@@ -97,13 +103,13 @@ export default function ShaderShowcase({ onStartClick, onDashboardClick, onAdmin
             <div id="gooey-btn" className="relative flex items-center group" style={{ filter: "url(#gooey-filter)" }}>
               <button
                 onClick={onDashboardClick}
-                className="absolute right-0 px-3 py-2 rounded-full bg-charcoal text-white font-normal text-xs transition-all duration-300 hover:bg-charcoal/90 cursor-pointer h-9 flex items-center justify-center -translate-x-10 group-hover:-translate-x-20 z-0"
+                className="absolute right-0 h-9 -translate-x-10 rounded-full bg-gradient-to-b from-charcoal to-[#202327] px-3 text-xs font-normal text-white shadow-lg shadow-black/30 transition-all duration-300 group-hover:-translate-x-20 flex items-center justify-center z-0 cursor-pointer"
               >
                 <ArrowRight className="w-4 h-4" />
               </button>
               <button
                 onClick={onDashboardClick}
-                className="px-6 py-2 rounded-full bg-charcoal text-white font-medium text-xs transition-all duration-300 hover:bg-charcoal/90 cursor-pointer h-9 flex items-center z-10 shadow-md"
+                className="h-9 rounded-full bg-gradient-to-b from-charcoal to-[#202327] px-6 text-xs font-semibold text-white shadow-lg shadow-black/30 transition-all duration-300 hover:shadow-honey/20 flex items-center z-10 cursor-pointer"
               >
                 Go to Dashboard
               </button>
