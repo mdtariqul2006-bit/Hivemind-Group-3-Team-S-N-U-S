@@ -2,6 +2,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useRef,
   useState,
   type ReactNode,
@@ -30,8 +31,16 @@ const ToastContext = createContext<ToastContextValue | null>(null);
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const counter = useRef(0);
+  // Auto dismiss timers, kept so a toast closed by hand (or a provider that
+  // unmounts) does not leave a timer running that fires setToasts later.
+  const timers = useRef(new Map<number, number>());
 
   const dismiss = useCallback((id: number) => {
+    const timer = timers.current.get(id);
+    if (timer !== undefined) {
+      window.clearTimeout(timer);
+      timers.current.delete(id);
+    }
     setToasts((t) => t.filter((x) => x.id !== id));
   }, []);
 
@@ -39,10 +48,18 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     (message: string, tone: Toast['tone'] = 'honey') => {
       const id = ++counter.current;
       setToasts((t) => [...t, { id, message, tone }]);
-      window.setTimeout(() => dismiss(id), 4000);
+      timers.current.set(id, window.setTimeout(() => dismiss(id), 4000));
     },
     [dismiss],
   );
+
+  useEffect(() => {
+    const pending = timers.current;
+    return () => {
+      pending.forEach((timer) => window.clearTimeout(timer));
+      pending.clear();
+    };
+  }, []);
 
   return (
     <ToastContext.Provider value={{ toasts, push, dismiss }}>{children}</ToastContext.Provider>

@@ -1,6 +1,26 @@
-import type { OnboardingState, View } from '@/types';
+import type { LearningStyle, OnboardingState, RoleId, View } from '@/types';
 
 const STORAGE_KEY = 'hm-onboarding-state-v1';
+
+/**
+ * Roles the app has task data for. A stored role outside this set (an older
+ * schema, or hand edited storage) used to reach tasksForRole and throw on
+ * ROLE_TASKS[role] being undefined, which white screened the whole app on
+ * every load with no way to recover from the UI.
+ */
+const VALID_ROLES: RoleId[] = ['designer', 'engineer', 'marketer'];
+
+function restorableRole(value: unknown): RoleId | null {
+  return VALID_ROLES.includes(value as RoleId) ? (value as RoleId) : null;
+}
+
+const VALID_LEARNING_STYLES: LearningStyle[] = ['video', 'reading', 'hands-on'];
+
+function restorableLearningStyle(value: unknown): LearningStyle | null {
+  return VALID_LEARNING_STYLES.includes(value as LearningStyle)
+    ? (value as LearningStyle)
+    : null;
+}
 
 /**
  * Views that are safe to reopen on a reload. Deliberately excludes 'admin' and
@@ -15,8 +35,48 @@ function restorableView(value: unknown, fallback: View): View {
 }
 
 /**
+ * Guarded localStorage access.
+ *
+ * Touching localStorage can throw, not just fail: Safari private mode and
+ * blocked third party storage raise SecurityError on plain property access,
+ * and a full quota raises QuotaExceededError on write. Callers here treat
+ * storage as a cache that may be unavailable rather than as something that is
+ * always there, so a blocked browser degrades to "nothing saved" instead of
+ * taking a screen down with it.
+ */
+export function safeGetItem(key: string): string | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    return localStorage.getItem(key);
+  } catch (err) {
+    console.warn(`Could not read "${key}" from storage:`, err);
+    return null;
+  }
+}
+
+export function safeSetItem(key: string, value: string): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    localStorage.setItem(key, value);
+    return true;
+  } catch (err) {
+    console.warn(`Could not write "${key}" to storage:`, err);
+    return false;
+  }
+}
+
+export function safeRemoveItem(key: string): void {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.removeItem(key);
+  } catch (err) {
+    console.warn(`Could not remove "${key}" from storage:`, err);
+  }
+}
+
+/**
  * Local persistence layer for HiveMind onboarding state.
- * 
+ *
  * Safely restores user selections, completed task IDs, checked sub-items, and milestone
  * celebrations across page reloads and browser sessions.
  */
@@ -33,6 +93,11 @@ export function loadPersistedState(initial: OnboardingState): OnboardingState {
       completedTaskIds: Array.isArray(parsed.completedTaskIds) ? parsed.completedTaskIds : [],
       checkedItems: parsed.checkedItems && typeof parsed.checkedItems === 'object' ? parsed.checkedItems : {},
       celebratedPhases: Array.isArray(parsed.celebratedPhases) ? parsed.celebratedPhases : [],
+      // Both are validated against known values rather than trusted from the
+      // spread above, so unrecognised data degrades to "not chosen yet"
+      // instead of crashing task lookup.
+      role: restorableRole(parsed.role),
+      learningStyle: restorableLearningStyle(parsed.learningStyle),
       view: restorableView(parsed.view, initial.view),
       // Never restore a transient overlay. Reloading straight back into a task
       // sheet or a celebration modal is disorienting, and the celebration in

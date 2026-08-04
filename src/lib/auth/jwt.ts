@@ -1,10 +1,19 @@
 import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
 
 /**
- * Production-ready JWT authentication helper module.
- * 
- * Supports Web Crypto API signed HS256 tokens with dynamic environment configuration,
- * secure expiration parameters, role enforcement, and token validation.
+ * Client side JWT helper for the admin console demo.
+ *
+ * These are genuine HS256 tokens: really signed, really verified, with a real
+ * two hour expiry that the app enforces. What they are not is a security
+ * boundary. There is no backend in this project, so the signing secret has to
+ * ship inside the browser bundle (anything prefixed VITE_ is inlined at build
+ * time, and the fallback below is hardcoded). Anyone can read it from the
+ * built JavaScript and mint their own admin token.
+ *
+ * That trade is deliberate for a coursework prototype whose goal is to show
+ * the full JWT flow end to end: issue, store, verify, expire, and gate a
+ * route. Do not treat this as protecting anything real. A production version
+ * moves signing behind a server that keeps the secret private.
  */
 
 function getSecretKey(): Uint8Array {
