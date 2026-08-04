@@ -14,6 +14,12 @@ New hires often meet an onboarding process that is impersonal and document heavy
 
 The prototype is built around Northwind, a fictional client used to ground the design in a concrete scenario, following the HiveMind Academy brief for a four week UX Product Discovery Sprint.
 
+> **Next up:** the onboarding assistant, a small local Q&A widget, is scaffolded but not
+> yet built. Read [`docs/onboarding-assistant-spec.md`](docs/onboarding-assistant-spec.md)
+> in full before starting on it, whether you are a teammate or another Claude session
+> picking this up, it has the architecture, file plan, and the reasoning behind why this
+> is not a wired up LLM.
+
 ### What is in the prototype
 
 * A guided roadmap split into Day 1, Week 1, and Month 1.
@@ -70,7 +76,7 @@ Member Sign In flow still works, only the Admin Login throws.
 | `npm run build` | Runs the TypeScript build, then the production Vite build |
 | `npm run preview` | Serves the last production build locally |
 
-Both `npm run typecheck` and `npm run build` should pass with no errors before any commit. See [`claude.md`](claude.md) for the full set of conventions this project follows.
+Both `npm run typecheck` and `npm run build` should pass with no errors before any commit.
 
 ## Project structure
 
@@ -90,7 +96,7 @@ The rest of the repository holds the coursework evidence pack. Each folder below
 
 | Folder | Contents |
 |---|---|
-| [`docs/`](docs) | Decisions log, hypotheses, research plan, and success metrics |
+| [`docs/`](docs) | Decisions log, hypotheses, research plan, success metrics, presentation guideline, and the onboarding assistant feature spec |
 | [`research/`](research) | Interview transcripts, notes, and synthesis |
 | [`design/`](design) | Journey maps, wireframes, and exported screens |
 | [`delivery/`](delivery) | The Week 4 validation report |
