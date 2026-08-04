@@ -1,18 +1,16 @@
 import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
 
 /**
- * Production-ready JWT authentication helper module.
- * 
- * Supports Web Crypto API signed HS256 tokens with dynamic environment configuration,
- * secure expiration parameters, role enforcement, and token validation.
- */
+  * Prototype-only JWT authentication helper.
+  * Requires VITE_JWT_SECRET to be set. Does not ship a fallback key.
+  */
 
 function getSecretKey(): Uint8Array {
   const secretEnv = import.meta.env.VITE_JWT_SECRET;
-  if (!secretEnv && import.meta.env.PROD) {
-    throw new Error('VITE_JWT_SECRET environment variable is missing in production environment');
+  if (!secretEnv) {
+    throw new Error('VITE_JWT_SECRET is required for admin JWT signing');
   }
-  return new TextEncoder().encode(secretEnv ?? 'hivemind-academy-production-secure-key-2026');
+  return new TextEncoder().encode(secretEnv);
 }
 
 const ISSUER = 'hivemind-academy';

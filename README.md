@@ -53,10 +53,15 @@ Requires Node.js 20 or later and npm.
 git clone https://github.com/mdtariqul2006-bit/Hivemind-Group-3-Team-S-N-U-S.git
 cd Hivemind-Group-3-Team-S-N-U-S
 npm install
+cp .env.example .env.local
 npm run dev
 ```
 
 Vite prints the local address to open, usually `http://localhost:5173`.
+
+The `.env.local` step is required for the admin console: `VITE_JWT_SECRET` signs and verifies
+its login token. Any value works locally, see `.env.example` for details. Without it, the
+Member Sign In flow still works, only the Admin Login throws.
 
 | Script | What it does |
 |---|---|

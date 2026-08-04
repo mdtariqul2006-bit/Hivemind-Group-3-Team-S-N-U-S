@@ -26,14 +26,13 @@ import { HexFrame } from '@/components/ui/hex-frame';
 import { useAuth } from '@/state/auth-context';
 import { useToast } from '@/state/toast-context';
 import {
-  KPIS,
-  COMPLETION_TREND,
-  ROLE_SPLIT,
   BOTTLENECKS,
+  COMPLETION_TREND,
   WEEKLY_ACTIVITY,
 } from '@/data/admin-metrics';
 import { DOCUMENTS } from '@/data/documents';
 import { EASE_OUT } from '@/lib/motion';
+import { getCalculatedMetrics } from '@/lib/metrics-calculator';
 
 /** Admin console shell. Rendered only once a valid token is present. */
 export function AdminDashboard() {
@@ -43,6 +42,9 @@ export function AdminDashboard() {
   // jumps to the starter roster and filters it, rather than doing nothing.
   const [starterQuery, setStarterQuery] = useState('');
   const reduce = useReducedMotion();
+
+  // Dynamic real-time metrics calculation engine
+  const { kpis, completionTrend, roleSplit, recentActivity, starters } = getCalculatedMetrics();
 
   const title = NAV.find((n) => n.id === section)?.label ?? 'Overview';
 
@@ -76,9 +78,16 @@ export function AdminDashboard() {
               exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
               transition={reduce ? { duration: 0.15 } : { duration: 0.35, ease: EASE_OUT }}
             >
-              {section === 'overview' && <OverviewSection />}
+              {section === 'overview' && (
+                <OverviewSection
+                  kpis={kpis}
+                  completionTrend={completionTrend}
+                  roleSplit={roleSplit}
+                  recentActivity={recentActivity}
+                />
+              )}
               {section === 'starters' && (
-                <StartersSection query={starterQuery} onQueryChange={setStarterQuery} />
+                <StartersSection query={starterQuery} onQueryChange={setStarterQuery} items={starters} />
               )}
               {section === 'analytics' && <AnalyticsSection />}
               {section === 'documents' && <DocumentsSection />}
@@ -111,7 +120,17 @@ function SectionHeader({
   );
 }
 
-function OverviewSection() {
+function OverviewSection({
+  kpis,
+  completionTrend,
+  roleSplit,
+  recentActivity,
+}: {
+  kpis: ReturnType<typeof getCalculatedMetrics>['kpis'];
+  completionTrend: ReturnType<typeof getCalculatedMetrics>['completionTrend'];
+  roleSplit: ReturnType<typeof getCalculatedMetrics>['roleSplit'];
+  recentActivity: ReturnType<typeof getCalculatedMetrics>['recentActivity'];
+}) {
   const { admin } = useAuth();
   const { push } = useToast();
   const firstName = admin?.name.split(' ')[0] ?? 'there';
@@ -132,7 +151,7 @@ function OverviewSection() {
       />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {KPIS.map((kpi) => (
+        {kpis.map((kpi) => (
           <StatCard key={kpi.id} kpi={kpi} />
         ))}
       </div>
@@ -150,7 +169,7 @@ function OverviewSection() {
                 Up 24 points
               </Badge>
             </div>
-            <AreaChart data={COMPLETION_TREND} />
+            <AreaChart data={completionTrend} />
           </GlowCard>
         </Reveal>
 
@@ -158,7 +177,7 @@ function OverviewSection() {
           <GlowCard className="h-full p-5 sm:p-6">
             <h3 className="mb-1 text-lg font-semibold text-ink">Starters by team</h3>
             <p className="mb-5 text-sm text-muted">Current cohort</p>
-            <DonutChart data={ROLE_SPLIT} />
+            <DonutChart data={roleSplit} />
           </GlowCard>
         </Reveal>
       </div>
@@ -176,7 +195,7 @@ function OverviewSection() {
           <GlowCard className="h-full p-5 sm:p-6">
             <h3 className="mb-1 text-lg font-semibold text-ink">Recent activity</h3>
             <p className="mb-5 text-sm text-muted">Latest events</p>
-            <ActivityFeed />
+            <ActivityFeed items={recentActivity} />
           </GlowCard>
         </Reveal>
       </div>
@@ -187,9 +206,11 @@ function OverviewSection() {
 function StartersSection({
   query,
   onQueryChange,
+  items,
 }: {
   query: string;
   onQueryChange: (query: string) => void;
+  items: ReturnType<typeof getCalculatedMetrics>['starters'];
 }) {
   return (
     <>
@@ -199,7 +220,7 @@ function StartersSection({
       />
       <Reveal>
         <GlowCard className="p-5 sm:p-6">
-          <RosterTable query={query} onQueryChange={onQueryChange} />
+          <RosterTable query={query} onQueryChange={onQueryChange} items={items} />
         </GlowCard>
       </Reveal>
     </>
