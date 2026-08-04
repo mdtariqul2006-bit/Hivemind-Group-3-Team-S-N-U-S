@@ -46,13 +46,12 @@ export function TopBar({ title }: { title?: string }) {
           cannot draw underneath the navigation the way the old centred version did. */}
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-5">
         <div className="flex min-w-0 items-center gap-3">
+          {/* The mark always goes home, for signed in members too. A logo that
+              lands somewhere different depending on who you are is the kind of
+              thing people stop trusting, and there are nav links for the
+              dashboard already. */}
           <button
-            onClick={() =>
-              dispatch({
-                type: 'go',
-                view: !user ? 'landing' : state.role ? 'dashboard' : 'personalise',
-              })
-            }
+            onClick={() => dispatch({ type: 'go', view: 'landing' })}
             className="flex shrink-0 items-center gap-2.5 rounded-full"
             aria-label="HiveMind home"
           >

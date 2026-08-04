@@ -24,6 +24,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { HexFrame } from '@/components/ui/hex-frame';
 import { useAuth } from '@/state/auth-context';
+import { useOnboarding } from '@/state/onboarding-context';
 import { useToast } from '@/state/toast-context';
 import {
   KPIS,
@@ -37,7 +38,11 @@ import { EASE_OUT } from '@/lib/motion';
 
 /** Admin console shell. Rendered only once a valid token is present. */
 export function AdminDashboard() {
-  const [section, setSection] = useState<AdminSection>('overview');
+  // The open section lives in navigation state, not local state, so it has a URL
+  // (#/admin/analytics), survives a refresh, and answers to back and forward.
+  const { state, dispatch } = useOnboarding();
+  const section = state.adminSection;
+  const setSection = (s: AdminSection) => dispatch({ type: 'set-admin-section', section: s });
   const [navOpen, setNavOpen] = useState(false);
   // Lifted so the topbar's console search can actually land somewhere: it
   // jumps to the starter roster and filters it, rather than doing nothing.

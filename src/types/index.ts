@@ -68,8 +68,13 @@ export interface Person {
   accent: 'honey' | 'pink' | 'sage';
 }
 
+/** Sections inside the admin console, kept here so routing can address them. */
+export type AdminSection = 'overview' | 'starters' | 'analytics' | 'documents' | 'security';
+
 export interface OnboardingState {
   view: View;
+  /** Which admin console section is open, so it can live in the URL. */
+  adminSection: AdminSection;
   role: RoleId | null;
   startDate: string | null;
   learningStyle: LearningStyle | null;

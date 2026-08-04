@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from 'react';
 import type {
+  AdminSection,
   LearningStyle,
   OnboardingState,
   PhaseId,
@@ -18,9 +19,14 @@ import type {
 import { PHASES } from '@/data/roles';
 import { tasksForRole } from '@/data/tasks';
 import { clearPersistedState, loadPersistedState, savePersistedState } from '@/lib/storage';
+import { routeFromHash } from '@/hooks/use-history-sync';
+
+/** Views that render nothing meaningful until a role has been picked. */
+const ROLE_DEPENDENT: View[] = ['dashboard', 'people', 'documents'];
 
 type Action =
   | { type: 'go'; view: View }
+  | { type: 'set-admin-section'; section: AdminSection }
   | { type: 'set-role'; role: RoleId }
   | { type: 'set-start-date'; date: string }
   | { type: 'set-learning-style'; style: LearningStyle }
@@ -43,6 +49,7 @@ function defaultStartDate(): string {
 
 export const initialState: OnboardingState = {
   view: 'landing',
+  adminSection: 'overview',
   role: null,
   startDate: defaultStartDate(),
   learningStyle: null,
@@ -72,6 +79,8 @@ export function reducer(state: OnboardingState, action: Action): OnboardingState
   switch (action.type) {
     case 'go':
       return { ...state, view: action.view };
+    case 'set-admin-section':
+      return { ...state, adminSection: action.section };
     case 'set-role':
       return { ...state, role: action.role };
     case 'set-start-date':
@@ -148,7 +157,23 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     const pending = restored.role
       ? phaseNewlyComplete(restored.role, restored.completedTaskIds, restored.celebratedPhases)
       : null;
-    return { ...restored, pendingCelebration: pending };
+
+    // A URL wins over the stored view, so a deep link or a refresh opens the
+    // screen that was asked for. Seeding it here rather than dispatching after
+    // mount means the first render is already correct, with no transition away
+    // from the landing page. Role dependent screens still fall back when there
+    // is no role, matching the rule the persistence layer already applies.
+    const route = routeFromHash();
+    const wanted =
+      !restored.role && ROLE_DEPENDENT.includes(route.view) ? 'landing' : route.view;
+
+    return {
+      ...restored,
+      view: wanted,
+      adminSection: route.section ?? 'overview',
+      openTaskId: wanted === route.view ? route.taskId : null,
+      pendingCelebration: pending,
+    };
   });
 
   useEffect(() => {

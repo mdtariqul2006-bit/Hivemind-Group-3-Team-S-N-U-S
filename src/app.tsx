@@ -2,6 +2,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useOnboarding } from '@/state/onboarding-context';
 import { useAuth } from '@/state/auth-context';
 import { useSmoothScroll } from '@/hooks/use-smooth-scroll';
+import { useHistorySync } from '@/hooks/use-history-sync';
 import { AnimatedBackground } from '@/components/motion/animated-background';
 import { TopBar } from '@/components/layout/top-bar';
 import { Landing } from '@/screens/landing';
@@ -28,6 +29,7 @@ export function App() {
   const { state, tasks } = useOnboarding();
   const { isAuthenticated, ready } = useAuth();
   useSmoothScroll();
+  useHistorySync();
 
   const openTask = state.openTaskId
     ? (tasks.find((t) => t.id === state.openTaskId) ?? null)

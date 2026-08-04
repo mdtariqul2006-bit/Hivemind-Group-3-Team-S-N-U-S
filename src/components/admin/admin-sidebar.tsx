@@ -10,6 +10,7 @@ import {
   X,
 } from 'lucide-react';
 import { LogoMark } from '@/components/ui/logo';
+import type { AdminSection } from '@/types';
 import { useAuth } from '@/state/auth-context';
 import { useOnboarding } from '@/state/onboarding-context';
 import { springSoft } from '@/lib/motion';
@@ -31,7 +32,7 @@ function useIsDesktopRail(): boolean {
   return isDesktop;
 }
 
-export type AdminSection = 'overview' | 'starters' | 'analytics' | 'documents' | 'security';
+export type { AdminSection } from '@/types';
 
 export const NAV: Array<{ id: AdminSection; label: string; icon: typeof LayoutDashboard }> = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard },
@@ -51,6 +52,7 @@ interface SidebarProps {
 
 export function AdminSidebar({ active, onSelect, open, onClose }: SidebarProps) {
   const isDesktopRail = useIsDesktopRail();
+  const { dispatch } = useOnboarding();
   // Below `lg` the drawer is only a transform away from the viewport, not
   // actually removed, so its nav links and sign out button stay keyboard
   // focusable and screen-reader visible unless explicitly hidden here.
@@ -85,10 +87,17 @@ export function AdminSidebar({ active, onSelect, open, onClose }: SidebarProps) 
             where the roughly 440px of content would otherwise be clipped. */}
         <div className="flex h-full flex-col overflow-y-auto">
           <div className="flex shrink-0 items-center justify-between px-5 py-5">
-            <span className="flex items-center gap-2.5">
+            {/* The mark is a home link here too, so it behaves the same way in
+                the console as it does on the rest of the site. */}
+            <button
+              type="button"
+              onClick={() => dispatch({ type: 'go', view: 'landing' })}
+              aria-label="HiveMind home"
+              className="flex items-center gap-2.5 rounded-full transition-opacity hover:opacity-80"
+            >
               <LogoMark size={30} />
               <span className="text-base font-semibold tracking-tight text-ink">HiveMind</span>
-            </span>
+            </button>
             <button
               onClick={onClose}
               aria-label="Close navigation"
