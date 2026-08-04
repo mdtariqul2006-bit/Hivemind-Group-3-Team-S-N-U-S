@@ -87,7 +87,7 @@ export function Modal({
   );
 }
 
-function trapFocus(e: KeyboardEvent, container: HTMLElement | null) {
+export function trapFocus(e: KeyboardEvent, container: HTMLElement | null) {
   if (!container) return;
   const focusables = container.querySelectorAll<HTMLElement>(
     'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',

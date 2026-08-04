@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import { Compass, HeartHandshake, TrendingUp } from 'lucide-react';
 import { useOnboarding } from '@/state/onboarding-context';
 import { useMember } from '@/state/member-context';
+import { useAssistant } from '@/state/assistant-context';
+import { useSectionVisible } from '@/hooks/use-section-visible';
 import { Button } from '@/components/ui/button';
 import { Reveal, RevealGroup } from '@/components/motion/reveal';
 import { HexFrame } from '@/components/ui/hex-frame';
@@ -37,6 +39,10 @@ const PROMISES = [
 export function Landing() {
   const { state, dispatch } = useOnboarding();
   const { user: member } = useMember();
+  const { playEntrance } = useAssistant();
+  // The assistant "climbs out of the box" the first time this section
+  // scrolls past, see docs/onboarding-assistant-spec.md section 4.
+  const robotSectionRef = useSectionVisible<HTMLDivElement>(playEntrance);
 
   // Dashboard has nothing to show without a role, send an unpersonalised
   // visitor to the wizard first instead of a blank-looking "complete" screen.
@@ -69,7 +75,7 @@ export function Landing() {
       </div>
 
       {/* Interactive 3D Robot Whobee Section */}
-      <div className="mx-auto max-w-6xl px-5">
+      <div ref={robotSectionRef} className="mx-auto max-w-6xl px-5">
         <RobotSection />
       </div>
 

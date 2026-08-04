@@ -15,6 +15,7 @@ import { Milestone } from '@/screens/milestone';
 import { AdminDashboard } from '@/screens/admin-dashboard';
 import { AdminLogin } from '@/screens/admin-login';
 import { ToastStack } from '@/components/ui/toast-stack';
+import { AssistantLauncher } from '@/components/assistant/assistant-launcher';
 import { EASE_OUT } from '@/lib/motion';
 
 const TITLES: Record<string, string> = {
@@ -89,6 +90,10 @@ export function App() {
       <AnimatePresence>
         {state.pendingCelebration && <Milestone key="milestone" phaseId={state.pendingCelebration} />}
       </AnimatePresence>
+
+      {/* Not shown on the admin console, that surface has its own audience and
+          chrome, see docs/onboarding-assistant-spec.md section 4. */}
+      {state.view !== 'admin' && <AssistantLauncher />}
 
       <ToastStack />
     </div>

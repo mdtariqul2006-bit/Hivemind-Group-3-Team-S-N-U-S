@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from '@/app';
+import { AssistantProvider } from '@/state/assistant-context';
 import { AuthProvider } from '@/state/auth-context';
 import { MemberProvider } from '@/state/member-context';
 import { OnboardingProvider } from '@/state/onboarding-context';
@@ -16,7 +17,10 @@ createRoot(root).render(
       <AuthProvider>
         <MemberProvider>
           <OnboardingProvider>
-            <App />
+            {/* Reads onboarding state (role, completed tasks), must nest inside it. */}
+            <AssistantProvider>
+              <App />
+            </AssistantProvider>
           </OnboardingProvider>
         </MemberProvider>
       </AuthProvider>
