@@ -9,7 +9,7 @@ const { workingStyle, workingPrinciples } = HIVEMIND_RESEARCH;
  */
 export function PrinciplesSection() {
   return (
-    <section className="relative overflow-hidden border-t border-border bg-canvas py-24">
+    <section className="relative overflow-hidden border-t border-border py-24">
       <div className="mx-auto w-full max-w-6xl px-5">
         <Reveal className="mb-12 max-w-2xl">
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-1 text-xs font-semibold tracking-wider text-honey-deep uppercase shadow-sm">

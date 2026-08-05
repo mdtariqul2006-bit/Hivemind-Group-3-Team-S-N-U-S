@@ -95,16 +95,27 @@ export function HoneycombCanvas() {
     // Resolve CSS custom properties once per resize so we never call
     // getComputedStyle per frame.
     let honeyColor = '245, 158, 11';
-    let strokeColor = 'rgba(245, 158, 11, 0.12)';
+    // Alpha range the ambient pulse sweeps between. Kept as numbers rather than a
+    // prebuilt rgba string: an earlier version built a themed `strokeColor` here
+    // and then overwrote its alpha with a hardcoded range at draw time, so the
+    // light/dark distinction was computed and silently thrown away, pinning the
+    // grid far fainter than intended.
+    let strokeAlphaMin = 0.16;
+    let strokeAlphaMax = 0.3;
 
     function readTheme() {
       const styles = getComputedStyle(document.documentElement);
       const honey = styles.getPropertyValue('--hm-honey').trim() || '#ffc370';
       const rgb = hexToRgb(honey);
       honeyColor = rgb ? `${rgb.r}, ${rgb.g}, ${rgb.b}` : '245, 158, 11';
-      strokeColor = isDark()
-        ? `rgba(${honeyColor}, 0.10)`
-        : `rgba(${honeyColor}, 0.16)`;
+      if (isDark()) {
+        strokeAlphaMin = 0.16;
+        strokeAlphaMax = 0.3;
+      } else {
+        // Warm honey on a near-white canvas needs more alpha to read at all.
+        strokeAlphaMin = 0.22;
+        strokeAlphaMax = 0.38;
+      }
     }
 
     function hexToRgb(hex: string) {
@@ -151,6 +162,7 @@ export function HoneycombCanvas() {
       const rows = Math.ceil(height / h) + 2;
 
       ctx.lineWidth = 1;
+      const alphaSpan = strokeAlphaMax - strokeAlphaMin;
       for (let row = -1; row < rows; row++) {
         for (let col = -1; col < cols; col++) {
           const x = col * w + (row % 2 !== 0 ? w / 2 : 0);
@@ -160,7 +172,8 @@ export function HoneycombCanvas() {
           const pulse = reduce
             ? 0.5
             : 0.5 + 0.5 * Math.sin(time * 0.00025 + (x + y) * 0.01);
-          ctx.strokeStyle = strokeColor.replace(/[\d.]+\)$/, `${(0.06 + pulse * 0.08).toFixed(3)})`);
+          const alpha = strokeAlphaMin + pulse * alphaSpan;
+          ctx.strokeStyle = `rgba(${honeyColor}, ${alpha.toFixed(3)})`;
           drawHexPath(ctx, x, y, HEX_SIZE);
           ctx.stroke();
         }

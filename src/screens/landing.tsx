@@ -71,13 +71,12 @@ export function Landing() {
         <RobotSection />
       </div>
 
-      {/* Promises section featuring clean high-contrast container (flicker-free).
-          Solid `bg-canvas`, not a translucent tint: every band on this page is
-          fully opaque and alternates canvas/sunk down the page (MissionBand is
-          sunk, Pillars canvas, and so on). A 30% tint here was the one section the
-          honeycomb bled through, which read as a patch of a different colour
-          rather than part of the rhythm. */}
-      <section className="relative overflow-hidden border-t border-border/80 bg-canvas py-20">
+      {/* Bands on this page carry no background fill of their own. The honeycomb
+          canvas is fixed behind the whole document, so any opaque section paints
+          over it and leaves a dead flat rectangle where the hex texture should be.
+          Separation comes from the `border-t` rule and the opaque cards instead,
+          which keeps the pattern reading continuously from the hero to the footer. */}
+      <section className="relative overflow-hidden border-t border-border/80 py-20">
         <div className="relative z-10 mx-auto w-full max-w-6xl px-5">
           <Reveal className="mb-12 text-center">
             <span className="inline-flex items-center gap-2 rounded-full border border-honey/40 bg-honey-wash/90 px-4 py-1 text-xs font-bold uppercase tracking-wider text-honey-deep shadow-sm">
@@ -121,7 +120,7 @@ export function Landing() {
       <InsightsSection />
 
       {/* Closing personalisation CTA */}
-      <section className="relative overflow-hidden border-t border-border bg-canvas py-20">
+      <section className="relative overflow-hidden border-t border-border py-20">
         <div className="mx-auto w-full max-w-6xl px-5">
           <Reveal delay={0.05}>
             <div className="relative overflow-hidden rounded-3xl border border-border bg-surface/75 backdrop-blur-md px-8 py-8 shadow-sm">

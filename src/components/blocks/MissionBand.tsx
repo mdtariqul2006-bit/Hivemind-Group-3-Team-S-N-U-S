@@ -9,7 +9,7 @@ const { mission } = HIVEMIND_RESEARCH;
  */
 export function MissionBand() {
   return (
-    <section className="relative overflow-hidden border-t border-border bg-sunk py-24">
+    <section className="relative overflow-hidden border-t border-border py-24">
       <div className="mx-auto w-full max-w-6xl px-5">
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <Reveal>
