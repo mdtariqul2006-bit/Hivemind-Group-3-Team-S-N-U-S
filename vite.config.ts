@@ -19,9 +19,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes('@splinetool')) {
-            return 'spline-3d';
-          }
           if (id.includes('lucide-react')) {
             return 'icons';
           }

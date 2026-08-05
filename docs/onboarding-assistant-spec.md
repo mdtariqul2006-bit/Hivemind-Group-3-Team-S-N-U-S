@@ -89,19 +89,24 @@ Landing page structure today (`src/screens/landing.tsx`):
 
 ```
 ShaderShowcase (hero)
-RobotSection (the interactive 3D Whobee guide)   <- entrance trigger
+HiveSection (Whobee's honeycomb)   <- entrance trigger
 Core Promises section
 ...
 ```
 
-The assistant's "climb out of the box" animation plays once, the first time
-`RobotSection` scrolls out of the viewport (IntersectionObserver on that
-section, not a raw scroll-position number, so it survives layout changes).
-After that first play, it stays docked in the corner as a small pill/bubble on
-every screen for the rest of the session, it does not replay the entrance on
-navigation. Track "has the intro played" in `sessionStorage`, not
-`localStorage`, so it replays once per visit, honestly reflecting that returning
-tomorrow is a new session, not spamming it every route change today.
+Whobee leaves the hive once, the first time `HiveSection` scrolls out of the
+viewport (IntersectionObserver on that section, not a raw scroll-position
+number, so it survives layout changes). Inside the section, scroll progress
+drives him up out of the centre comb cell and off toward the top right, and the
+docked launcher then arrives in the corner on the same arc. The two halves are
+deliberately one move: the corner bee has to read as the bee that just left the
+comb, not a second one appearing from nowhere.
+
+After that first play he stays docked in the corner on every screen for the rest
+of the session, and does not replay the entrance on navigation. "Has the intro
+played" lives in `sessionStorage`, not `localStorage`, so it replays once per
+visit, honestly reflecting that coming back tomorrow is a new session, rather
+than spamming it on every route change today.
 
 Not shown on the admin console (`state.view === 'admin'`), that surface ships
 its own chrome and audience (HR/admin, not a new starter), matching how
@@ -111,10 +116,19 @@ its own chrome and audience (HR/admin, not a new starter), matching how
 
 ```
 src/components/assistant/
-  assistant-launcher.tsx   Docked bubble (collapsed state) + the one-time
-                            box-opening entrance animation. Hex motif box,
-                            matching the brand's hexagon motif already used
-                            for the logo mark.
+  whobee.tsx               The mascot itself, an animated vector bee. Same
+                            creature the honeycomb canvas already draws in the
+                            background (amber body, dark banding, pale
+                            oscillating wings), plus a face. Every colour is a
+                            brand custom property, so both themes are handled
+                            and nothing is baked in.
+  hive-section.tsx         The honeycomb Whobee comes out of, on the landing
+                            page. Scroll progress through it drives him up out
+                            of the centre cell and away toward the corner.
+  assistant-launcher.tsx   Docked Whobee (collapsed state) + the one-time
+                            arrival, which continues the arc he left the hive
+                            on. Hex burst behind him on arrival, matching the
+                            brand's hexagon motif at logo scale.
   assistant-panel.tsx      Expanded chat panel: message list, input, close.
   assistant-message.tsx    One message bubble. Assistant messages render an
                             answer line plus a smaller "Because ..." line,
@@ -135,9 +149,16 @@ src/lib/assistant/
                         testable in isolation.
 
 src/hooks/use-section-visible.ts
-  Small IntersectionObserver hook for the RobotSection trigger. Generic
+  Small IntersectionObserver hook for the HiveSection trigger. Generic
   enough to reuse if another scroll-triggered moment comes up later.
 ```
+
+The mascot is deliberately vector rather than a 3D model or a hosted scene.
+Whobee started as a generic Spline robot loaded from Spline's CDN, which cost
+a 4.5MB runtime chunk, a network dependency, an off brand purple palette, and a
+third party attribution badge the team had begun covering up. An inline SVG in
+brand colours removes all four at once, and the "only as much as the job needs"
+argument in section 2 applies as much to the mascot as to the answer engine.
 
 Mount point: `src/app.tsx`, one line, right before `<ToastStack />`:
 

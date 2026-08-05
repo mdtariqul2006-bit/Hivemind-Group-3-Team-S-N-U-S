@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Reveal, RevealGroup } from '@/components/motion/reveal';
 import { HexFrame } from '@/components/ui/hex-frame';
 import ShaderShowcase from '@/components/ui/hero';
-import { Section as RobotSection } from '@/components/ui/robot-demo';
+import { HiveSection } from '@/components/assistant/hive-section';
 import { MissionBand } from '@/components/blocks/MissionBand';
 import { PillarsSection } from '@/components/blocks/PillarsSection';
 import { ProcessSection } from '@/components/blocks/ProcessSection';
@@ -38,9 +38,10 @@ const PROMISES = [
 export function Landing() {
   const { state, dispatch } = useOnboarding();
   const { playEntrance } = useAssistant();
-  // The assistant "climbs out of the box" the first time this section
-  // scrolls past, see docs/onboarding-assistant-spec.md section 4.
-  const robotSectionRef = useSectionVisible<HTMLDivElement>(playEntrance);
+  // Whobee leaves the hive the first time this section scrolls past, and the
+  // docked launcher picks him up in the corner, see
+  // docs/onboarding-assistant-spec.md section 4.
+  const hiveSectionRef = useSectionVisible<HTMLDivElement>(playEntrance);
 
   // Dashboard has nothing to show without a role, send an unpersonalised
   // visitor to the wizard first instead of a blank-looking "complete" screen.
@@ -66,9 +67,9 @@ export function Landing() {
         />
       </div>
 
-      {/* Interactive 3D Robot Whobee Section */}
-      <div ref={robotSectionRef} className="mx-auto max-w-6xl px-5">
-        <RobotSection />
+      {/* Whobee's hive. Scrolling past this is what sends him to the corner. */}
+      <div ref={hiveSectionRef} className="mx-auto max-w-6xl px-5">
+        <HiveSection />
       </div>
 
       {/* Bands on this page carry no background fill of their own. The honeycomb
