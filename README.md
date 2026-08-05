@@ -52,7 +52,8 @@ Group 3, Team SNUS, in partnership with HiveMind Academy.
 * Vite 6
 * Tailwind CSS v4
 * Framer Motion and GSAP for animation
-* Spline for the interactive 3D onboarding guide
+* Whobee, the assistant mascot, drawn as inline SVG in the brand palette, no 3D
+  runtime and no external scene host
 
 ## Getting started
 
@@ -67,6 +68,26 @@ npm run dev
 ```
 
 Vite prints the local address to open, usually `http://localhost:5173`.
+
+### The `whobee` shortcut
+
+`scripts/whobee` does all of the above in one command: installs anything
+missing, creates `.env.local` if it is not there, starts the dev server, waits
+until it is actually serving, and opens the app in its own browser window with
+no tabs or address bar. Link it onto your path once:
+
+```bash
+ln -sf "$PWD/scripts/whobee" ~/.local/bin/whobee
+```
+
+Then from anywhere:
+
+```bash
+whobee              # start and open
+whobee --no-open    # start only, print the URL
+whobee --build      # production build, then preview it
+whobee --stop       # stop a server it started
+```
 
 The `.env.local` step is required for the admin console: `VITE_JWT_SECRET` signs and verifies
 its login token. Any value works locally, see `.env.example` for details. Without it, the

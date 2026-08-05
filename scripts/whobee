@@ -1,0 +1,186 @@
+#!/usr/bin/env bash
+#
+# whobee: bring the HiveMind Smart Onboarding app up in one command.
+#
+# Wires up anything missing (dependencies, local env), starts the Vite dev
+# server, waits until it is actually serving, then opens it in a standalone
+# app window with no browser chrome.
+#
+#   whobee            start and open
+#   whobee --no-open  start only, print the URL
+#   whobee --stop     stop a server this script started
+#   whobee --build    production build, then preview it
+#
+# Ctrl-C stops the server and closes the window.
+
+set -euo pipefail
+
+# Resolve the repo root from this script's own location, so `whobee` works from
+# any directory, not just the project folder.
+SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
+REPO_ROOT="$(cd "$(dirname "$SCRIPT_PATH")/.." && pwd)"
+PID_FILE="${TMPDIR:-/tmp}/whobee-dev.pid"
+LOG_FILE="${TMPDIR:-/tmp}/whobee-dev.log"
+
+HONEY='\033[38;5;215m'
+DIM='\033[2m'
+BOLD='\033[1m'
+RESET='\033[0m'
+
+say()  { printf "${HONEY}🐝${RESET} %b\n" "$1"; }
+dim()  { printf "${DIM}   %b${RESET}\n" "$1"; }
+fail() { printf "${HONEY}🐝${RESET} %b\n" "$1" >&2; exit 1; }
+
+stop_server() {
+  if [[ -f "$PID_FILE" ]]; then
+    local pid
+    pid="$(cat "$PID_FILE")"
+    if kill -0 "$pid" 2>/dev/null; then
+      # Kill the whole process group: npm spawns vite as a child, so killing
+      # only the npm pid would leave the dev server holding the port.
+      kill -- "-$pid" 2>/dev/null || kill "$pid" 2>/dev/null || true
+      say "stopped the hive (pid $pid)"
+    fi
+    rm -f "$PID_FILE"
+  else
+    say "nothing to stop"
+  fi
+}
+
+if [[ "${1:-}" == "--stop" ]]; then
+  stop_server
+  exit 0
+fi
+
+OPEN_BROWSER=1
+MODE="dev"
+for arg in "$@"; do
+  case "$arg" in
+    --no-open) OPEN_BROWSER=0 ;;
+    --build)   MODE="build" ;;
+    --stop)    ;;
+    *) fail "unknown option: $arg" ;;
+  esac
+done
+
+cd "$REPO_ROOT"
+
+# A previous run may still be holding a port.
+if [[ -f "$PID_FILE" ]] && kill -0 "$(cat "$PID_FILE")" 2>/dev/null; then
+  say "a hive is already running, restarting it"
+  stop_server
+  sleep 1
+fi
+
+command -v node >/dev/null 2>&1 || fail "node is not installed, need Node 20 or later"
+
+NODE_MAJOR="$(node -p 'process.versions.node.split(".")[0]')"
+if (( NODE_MAJOR < 20 )); then
+  fail "node $NODE_MAJOR is too old, this project needs Node 20 or later"
+fi
+
+# Dependencies. Reinstall when package.json is newer than node_modules, which
+# catches a teammate's dependency change after a pull.
+if [[ ! -d node_modules ]] || [[ package.json -nt node_modules ]]; then
+  say "installing dependencies"
+  npm install --silent
+else
+  dim "dependencies up to date"
+fi
+
+# Local env. The admin console's JWT signing needs VITE_JWT_SECRET, without it
+# admin login throws. See .env.example.
+if [[ ! -f .env.local ]]; then
+  if [[ -f .env.example ]]; then
+    cp .env.example .env.local
+    say "created .env.local from .env.example"
+    dim "admin login needs VITE_JWT_SECRET, any value works locally"
+  else
+    printf 'VITE_JWT_SECRET=local-dev-only-secret\n' > .env.local
+    say "created .env.local with a local dev secret"
+  fi
+else
+  dim ".env.local present"
+fi
+
+if [[ "$MODE" == "build" ]]; then
+  say "building for production"
+  npm run build
+  say "serving the production build"
+  npm run preview
+  exit 0
+fi
+
+say "waking the hive"
+
+# setsid gives the server its own process group so stop_server can take down
+# npm and vite together.
+rm -f "$LOG_FILE"
+setsid npm run dev > "$LOG_FILE" 2>&1 &
+DEV_PID=$!
+echo "$DEV_PID" > "$PID_FILE"
+
+cleanup() {
+  echo
+  stop_server
+  exit 0
+}
+trap cleanup INT TERM
+
+# Wait for Vite to report its address. It picks another port when the default
+# is taken, so parse the URL rather than assuming 5173.
+URL=""
+for _ in $(seq 1 60); do
+  if [[ -f "$LOG_FILE" ]]; then
+    URL="$(sed 's/\x1b\[[0-9;]*m//g' "$LOG_FILE" | grep -oE 'http://localhost:[0-9]+' | head -1 || true)"
+    [[ -n "$URL" ]] && break
+  fi
+  if ! kill -0 "$DEV_PID" 2>/dev/null; then
+    echo
+    sed 's/\x1b\[[0-9;]*m//g' "$LOG_FILE" | tail -20
+    fail "the dev server exited before it started serving"
+  fi
+  sleep 0.5
+done
+
+[[ -n "$URL" ]] || { sed 's/\x1b\[[0-9;]*m//g' "$LOG_FILE" | tail -20; fail "timed out waiting for the dev server"; }
+
+# Serving the address is not the same as being ready to answer, so poll it.
+for _ in $(seq 1 40); do
+  if curl -sfo /dev/null "$URL"; then break; fi
+  sleep 0.5
+done
+
+say "the hive is up at ${BOLD}${URL}${RESET}"
+
+if (( OPEN_BROWSER )); then
+  BROWSER_BIN=""
+  for candidate in chromium-browser chromium google-chrome google-chrome-stable brave-browser microsoft-edge; do
+    if command -v "$candidate" >/dev/null 2>&1; then BROWSER_BIN="$candidate"; break; fi
+  done
+
+  if [[ -n "$BROWSER_BIN" ]]; then
+    # --app strips the tabs and address bar, so it opens as its own window
+    # rather than another tab in a browser you already had open.
+    say "opening Whobee in a standalone window"
+    setsid "$BROWSER_BIN" \
+      --app="$URL" \
+      --user-data-dir="${TMPDIR:-/tmp}/whobee-browser-profile" \
+      --no-first-run \
+      --no-default-browser-check \
+      > /dev/null 2>&1 &
+  elif command -v xdg-open >/dev/null 2>&1; then
+    dim "no chromium found, opening your default browser instead"
+    xdg-open "$URL" > /dev/null 2>&1 &
+  else
+    dim "could not find a browser to open, visit the address above"
+  fi
+fi
+
+echo
+dim "scroll past the hive and Whobee will follow you into the corner"
+dim "press Ctrl-C to stop, or run: whobee --stop"
+echo
+
+# Stream the server log so the terminal stays useful, and so Ctrl-C lands here.
+tail -f "$LOG_FILE" --pid="$DEV_PID" 2>/dev/null || wait "$DEV_PID"
