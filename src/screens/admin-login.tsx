@@ -6,6 +6,7 @@ import { useOnboarding } from '@/state/onboarding-context';
 import { Button } from '@/components/ui/button';
 import { LogoMark } from '@/components/ui/logo';
 import { HexFrame } from '@/components/ui/hex-frame';
+import { HoneycombBackdrop } from '@/components/ui/honeycomb-backdrop';
 import { DEMO_ADMIN } from '@/lib/auth/credentials';
 import { EASE_OUT } from '@/lib/motion';
 
@@ -49,11 +50,8 @@ export function AdminLogin() {
 
   return (
     <div className="relative grid min-h-[100dvh] place-items-center px-4 py-10">
-      {/* Soft brand glow behind the card. */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute left-1/2 top-1/4 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-honey/20 blur-[120px]" />
-        <div className="absolute bottom-1/4 right-1/4 h-[320px] w-[320px] rounded-full bg-pink/20 blur-[120px]" />
-      </div>
+      {/* Comb fragments and a bee, the brand motif carried into the sign in. */}
+      <HoneycombBackdrop />
 
       <motion.div
         initial={reduce ? { opacity: 0 } : { opacity: 0, y: 24 }}

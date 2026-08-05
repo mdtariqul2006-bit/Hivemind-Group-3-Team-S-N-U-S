@@ -4,6 +4,7 @@ import { useOnboarding } from '@/state/onboarding-context';
 import { Button } from '@/components/ui/button';
 import { GlowCard } from '@/components/motion/glow-card';
 import { Wordmark } from '@/components/ui/logo';
+import { HoneycombBackdrop } from '@/components/ui/honeycomb-backdrop';
 import { cn } from '@/lib/cn';
 
 type Tab = 'sign-in' | 'sign-up';
@@ -36,7 +37,11 @@ export function Auth() {
   }
 
   return (
-    <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col justify-center px-5 py-12">
+    <div className="relative flex min-h-[100dvh] w-full flex-col justify-center px-5 py-12">
+      {/* Comb fragments and a bee, the same motif as the admin sign in. */}
+      <HoneycombBackdrop />
+
+      <div className="relative mx-auto flex w-full max-w-md flex-col">
       <button
         onClick={() =>
           dispatch({
@@ -115,6 +120,7 @@ export function Auth() {
           </Button>
         </form>
       </GlowCard>
+      </div>
     </div>
   );
 }
