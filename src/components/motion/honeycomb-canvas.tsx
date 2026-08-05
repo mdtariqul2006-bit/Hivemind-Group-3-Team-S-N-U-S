@@ -252,17 +252,16 @@ export function HoneycombCanvas() {
           bee.vx += Math.sin(t) * 0.006;
           bee.vy += Math.cos(t * 1.3) * 0.006;
 
-          // Cursor influence: bees drift toward the pointer at range, and peel
-          // away once it gets close, so they read as curious rather than clingy.
+          // Cursor influence: bees drift toward pointer, peel away when close.
           if (pointer.active) {
             const dx = pointer.x - bee.x;
             const dy = pointer.y - bee.y;
-            const dist = Math.hypot(dx, dy) || 1;
+            const dist = Math.max(1, Math.hypot(dx, dy));
             if (dist < CURSOR_INFLUENCE_RADIUS) {
               const force = (1 - dist / CURSOR_INFLUENCE_RADIUS) * 0.03;
               if (dist < 46) {
-                bee.vx -= (dx / dist) * force * 3;
-                bee.vy -= (dy / dist) * force * 3;
+                bee.vx -= (dx / dist) * force * 2.5;
+                bee.vy -= (dy / dist) * force * 2.5;
               } else {
                 bee.vx += (dx / dist) * force;
                 bee.vy += (dy / dist) * force;
@@ -270,6 +269,7 @@ export function HoneycombCanvas() {
             }
           }
 
+          // Click ripple effect: smooth wave push without velocity explosion.
           for (const ripple of ripples) {
             // Clamped at zero: see the ripple rendering loop below for why a
             // ripple can briefly report a negative age.
@@ -277,16 +277,23 @@ export function HoneycombCanvas() {
             if (age > 900) continue;
             const dx = bee.x - ripple.x;
             const dy = bee.y - ripple.y;
-            const dist = Math.hypot(dx, dy) || 1;
+            const dist = Math.max(1, Math.hypot(dx, dy));
             const front = (age / 900) * 260;
-            if (Math.abs(dist - front) < 40) {
-              bee.vx += (dx / dist) * 0.5;
-              bee.vy += (dy / dist) * 0.5;
+            const waveDist = Math.abs(dist - front);
+            if (waveDist < 40) {
+              const waveForce = (1 - waveDist / 40) * 0.06;
+              bee.vx += (dx / dist) * waveForce;
+              bee.vy += (dy / dist) * waveForce;
             }
           }
 
-          const speed = Math.hypot(bee.vx, bee.vy);
-          const maxSpeed = 0.9;
+          let speed = Math.hypot(bee.vx, bee.vy);
+          const maxSpeed = 1.1;
+          if (!Number.isFinite(speed) || speed === 0) {
+            bee.vx = (Math.random() - 0.5) * 0.4;
+            bee.vy = (Math.random() - 0.5) * 0.4;
+            speed = Math.hypot(bee.vx, bee.vy);
+          }
           if (speed > maxSpeed) {
             bee.vx = (bee.vx / speed) * maxSpeed;
             bee.vy = (bee.vy / speed) * maxSpeed;
@@ -294,7 +301,12 @@ export function HoneycombCanvas() {
 
           bee.x += bee.vx * (dt * 0.06);
           bee.y += bee.vy * (dt * 0.06);
+          
+          if (!Number.isFinite(bee.x)) bee.x = Math.random() * width;
+          if (!Number.isFinite(bee.y)) bee.y = Math.random() * height;
+
           bee.angle = Math.atan2(bee.vy, bee.vx);
+          if (!Number.isFinite(bee.angle)) bee.angle = 0;
 
           // Wrap around edges rather than bounce, keeps the flock always in view
           // without a jarring reversal at the viewport edge.

@@ -14,6 +14,10 @@ import { AdminSidebar, NAV, type AdminSection } from '@/components/admin/admin-s
 import { AdminTopbar } from '@/components/admin/admin-topbar';
 import { StatCard } from '@/components/admin/stat-card';
 import { RosterTable } from '@/components/admin/roster-table';
+import { StartersKpis } from '@/components/admin/starters-kpis';
+import { DepartmentStats } from '@/components/admin/department-stats';
+import { StarterProfileDrawer } from '@/components/admin/starter-profile-drawer';
+import type { StarterRow } from '@/data/admin-metrics';
 import { ActivityFeed } from '@/components/admin/activity-feed';
 import { AreaChart } from '@/components/admin/charts/area-chart';
 import { DonutChart } from '@/components/admin/charts/donut-chart';
@@ -216,19 +220,44 @@ function StartersSection({
 }: {
   query: string;
   onQueryChange: (query: string) => void;
-  items: ReturnType<typeof getCalculatedMetrics>['starters'];
+  items: StarterRow[];
 }) {
+  const [selectedStarter, setSelectedStarter] = useState<StarterRow | null>(null);
+
   return (
     <>
       <SectionHeader
-        title="Starter roster"
-        blurb="Every person working through onboarding, with their buddy and progress."
+        title="Starters Onboarding Dashboard"
+        blurb="Real-time HR analytics, workforce distribution, and interactive starter profiles."
       />
+
+      {/* Top KPIs summary */}
       <Reveal>
+        <StartersKpis items={items} />
+      </Reveal>
+
+      {/* Department Quick Statistics */}
+      <Reveal delay={0.04}>
+        <DepartmentStats items={items} />
+      </Reveal>
+
+      {/* Starter Roster Table */}
+      <Reveal delay={0.08}>
         <GlowCard className="p-5 sm:p-6">
-          <RosterTable query={query} onQueryChange={onQueryChange} items={items} />
+          <RosterTable
+            query={query}
+            onQueryChange={onQueryChange}
+            items={items}
+            onSelectStarter={(starter) => setSelectedStarter(starter)}
+          />
         </GlowCard>
       </Reveal>
+
+      {/* Detailed Employee Profile Drawer */}
+      <StarterProfileDrawer
+        starter={selectedStarter}
+        onClose={() => setSelectedStarter(null)}
+      />
     </>
   );
 }
