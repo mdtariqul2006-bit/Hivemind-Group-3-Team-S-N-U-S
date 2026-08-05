@@ -1,0 +1,206 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="100%" height="100%" style="background:#090b0e; font-family: system-ui, -apple-system, sans-serif;">
+  <defs>
+    <linearGradient id="grid" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#14181f"/>
+      <stop offset="100%" stop-color="#090b0e"/>
+    </linearGradient>
+    <linearGradient id="honeyGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <pattern id="hexGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M20 0 L40 11.5 L40 34.5 L20 46 L0 34.5 L0 11.5 Z" fill="none" stroke="#222731" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1600" height="1000" fill="url(#grid)"/>
+  <rect width="1600" height="1000" fill="url(#hexGrid)" opacity="0.3"/>
+
+  <!-- Header Banner -->
+  <rect x="40" y="40" width="1520" height="70" rx="12" fill="#14181f" stroke="#2b313e" stroke-width="1"/>
+  <text x="70" y="82" fill="#f59e0b" font-size="24" font-weight="700" letter-spacing="1">HIVEMIND: SMART ONBOARDING</text>
+  <text x="500" y="80" fill="#94a3b8" font-size="14">System UI Architecture &amp; Low-Fidelity / High-Fidelity Wireframe Specification</text>
+  <rect x="1410" y="58" width="120" height="34" rx="17" fill="url(#honeyGrad)"/>
+  <text x="1440" y="80" fill="#ffffff" font-size="12" font-weight="600">v2.4 Final</text>
+
+  <!-- Wireframe 1: Landing Page -->
+  <g transform="translate(40, 140)">
+    <rect width="480" height="380" rx="10" fill="#0f1217" stroke="#2b313e" stroke-width="1.5"/>
+    <!-- Window top -->
+    <rect width="480" height="30" rx="10" fill="#181d26"/>
+    <circle cx="20" cy="15" r="5" fill="#ef4444"/>
+    <circle cx="36" cy="15" r="5" fill="#f59e0b"/>
+    <circle cx="52" cy="15" r="5" fill="#10b981"/>
+    <text x="240" y="20" fill="#64748b" font-size="11" text-anchor="middle">01. Landing &amp; Hero Section Wireframe</text>
+    
+    <!-- Content mock -->
+    <rect x="30" y="55" width="80" height="16" rx="4" fill="#f59e0b" opacity="0.8"/>
+    <rect x="370" y="55" width="80" height="16" rx="8" fill="#2b313e"/>
+    
+    <!-- Hero Box -->
+    <rect x="30" y="90" width="420" height="140" rx="8" fill="#14181f" stroke="#333b4d" stroke-dasharray="4"/>
+    <rect x="50" y="110" width="180" height="16" rx="3" fill="#cbd5e1"/>
+    <rect x="50" y="135" width="260" height="10" rx="2" fill="#64748b"/>
+    <rect x="50" y="150" width="220" height="10" rx="2" fill="#64748b"/>
+    <rect x="50" y="175" width="110" height="28" rx="14" fill="#f59e0b"/>
+    <!-- 3D Robot placeholder -->
+    <circle cx="380" cy="160" r="40" fill="#222731" stroke="#f59e0b" stroke-width="2"/>
+    <text x="380" y="164" fill="#f59e0b" font-size="10" text-anchor="middle">3D Whobee</text>
+
+    <!-- Promises grid -->
+    <rect x="30" y="245" width="130" height="105" rx="6" fill="#14181f"/>
+    <rect x="175" y="245" width="130" height="105" rx="6" fill="#14181f"/>
+    <rect x="320" y="245" width="130" height="105" rx="6" fill="#14181f"/>
+  </g>
+
+  <!-- Wireframe 2: Personalisation Wizard -->
+  <g transform="translate(560, 140)">
+    <rect width="480" height="380" rx="10" fill="#0f1217" stroke="#2b313e" stroke-width="1.5"/>
+    <rect width="480" height="30" rx="10" fill="#181d26"/>
+    <circle cx="20" cy="15" r="5" fill="#ef4444"/>
+    <circle cx="36" cy="15" r="5" fill="#f59e0b"/>
+    <circle cx="52" cy="15" r="5" fill="#10b981"/>
+    <text x="240" y="20" fill="#64748b" font-size="11" text-anchor="middle">02. Personalisation Wizard Wireframe</text>
+
+    <rect x="120" y="55" width="240" height="8" rx="4" fill="#222731"/>
+    <rect x="120" y="55" width="160" height="8" rx="4" fill="#f59e0b"/>
+
+    <text x="240" y="90" fill="#f8fafc" font-size="15" font-weight="600" text-anchor="middle">Pick your role at HiveMind</text>
+    
+    <!-- 3 Role cards -->
+    <rect x="40" y="115" width="125" height="180" rx="8" fill="#14181f" stroke="#10b981" stroke-width="2"/>
+    <text x="102" y="145" fill="#10b981" font-size="12" font-weight="700" text-anchor="middle">Designer</text>
+    <rect x="55" y="165" width="95" height="6" rx="2" fill="#64748b"/>
+    <rect x="55" y="180" width="80" height="6" rx="2" fill="#64748b"/>
+
+    <rect x="177" y="115" width="125" height="180" rx="8" fill="#14181f" stroke="#333b4d"/>
+    <text x="240" y="145" fill="#e2e8f0" font-size="12" font-weight="700" text-anchor="middle">Engineer</text>
+    <rect x="192" y="165" width="95" height="6" rx="2" fill="#64748b"/>
+
+    <rect x="315" y="115" width="125" height="180" rx="8" fill="#14181f" stroke="#333b4d"/>
+    <text x="377" y="145" fill="#e2e8f0" font-size="12" font-weight="700" text-anchor="middle">Marketer</text>
+    <rect x="330" y="165" width="95" height="6" rx="2" fill="#64748b"/>
+
+    <rect x="180" y="320" width="120" height="32" rx="16" fill="#f59e0b"/>
+    <text x="240" y="340" fill="#ffffff" font-size="12" font-weight="600" text-anchor="middle">Continue →</text>
+  </g>
+
+  <!-- Wireframe 3: Starter Roadmap Dashboard -->
+  <g transform="translate(1080, 140)">
+    <rect width="480" height="380" rx="10" fill="#0f1217" stroke="#2b313e" stroke-width="1.5"/>
+    <rect width="480" height="30" rx="10" fill="#181d26"/>
+    <circle cx="20" cy="15" r="5" fill="#ef4444"/>
+    <circle cx="36" cy="15" r="5" fill="#f59e0b"/>
+    <circle cx="52" cy="15" r="5" fill="#10b981"/>
+    <text x="240" y="20" fill="#64748b" font-size="11" text-anchor="middle">03. Starter Dashboard Wireframe</text>
+
+    <!-- TopBar -->
+    <rect x="20" y="45" width="440" height="24" rx="4" fill="#14181f"/>
+    <circle cx="440" cy="57" r="8" fill="#f59e0b"/>
+
+    <!-- Progress Ring & Hero -->
+    <rect x="20" y="80" width="440" height="110" rx="8" fill="#14181f"/>
+    <circle cx="80" cy="135" r="32" fill="none" stroke="#2b313e" stroke-width="8"/>
+    <circle cx="80" cy="135" r="32" fill="none" stroke="#f59e0b" stroke-width="8" stroke-dasharray="200" stroke-dashoffset="40"/>
+    <text x="80" y="140" fill="#f8fafc" font-size="12" font-weight="700" text-anchor="middle">92%</text>
+
+    <rect x="130" y="105" width="180" height="12" rx="3" fill="#cbd5e1"/>
+    <rect x="130" y="125" width="220" height="8" rx="2" fill="#64748b"/>
+    <rect x="130" y="140" width="160" height="8" rx="2" fill="#64748b"/>
+
+    <!-- Task List -->
+    <rect x="20" y="205" width="440" height="48" rx="6" fill="#181d26" stroke="#10b981"/>
+    <rect x="20" y="260" width="440" height="48" rx="6" fill="#181d26"/>
+    <rect x="20" y="315" width="440" height="48" rx="6" fill="#181d26"/>
+  </g>
+
+  <!-- Wireframe 4: Admin Console & HR Roster -->
+  <g transform="translate(40, 560)">
+    <rect width="720" height="400" rx="10" fill="#0f1217" stroke="#2b313e" stroke-width="1.5"/>
+    <rect width="720" height="30" rx="10" fill="#181d26"/>
+    <circle cx="20" cy="15" r="5" fill="#ef4444"/>
+    <circle cx="36" cy="15" r="5" fill="#f59e0b"/>
+    <circle cx="52" cy="15" r="5" fill="#10b981"/>
+    <text x="360" y="20" fill="#64748b" font-size="11" text-anchor="middle">04. Admin Roster &amp; HR KPIs Wireframe</text>
+
+    <!-- Sidebar -->
+    <rect x="10" y="40" width="120" height="350" rx="6" fill="#14181f"/>
+    <rect x="20" y="60" width="80" height="12" rx="3" fill="#f59e0b"/>
+    <rect x="20" y="90" width="90" height="16" rx="4" fill="#2b313e"/>
+    <rect x="20" y="115" width="90" height="16" rx="4" fill="#f59e0b" opacity="0.8"/>
+    <rect x="20" y="140" width="90" height="16" rx="4" fill="#2b313e"/>
+
+    <!-- Main Content: KPIs -->
+    <rect x="145" y="50" width="105" height="60" rx="6" fill="#14181f" stroke="#333b4d"/>
+    <text x="155" y="70" fill="#94a3b8" font-size="9">TOTAL STARTERS</text>
+    <text x="155" y="92" fill="#f8fafc" font-size="16" font-weight="700">7 Starters</text>
+
+    <rect x="258" y="50" width="105" height="60" rx="6" fill="#14181f" stroke="#10b981"/>
+    <text x="268" y="70" fill="#10b981" font-size="9">ON TRACK</text>
+    <text x="268" y="92" fill="#f8fafc" font-size="16" font-weight="700">3 On Track</text>
+
+    <rect x="371" y="50" width="105" height="60" rx="6" fill="#14181f" stroke="#f59e0b"/>
+    <text x="381" y="70" fill="#f59e0b" font-size="9">AHEAD</text>
+    <text x="381" y="92" fill="#f8fafc" font-size="16" font-weight="700">1 Ahead</text>
+
+    <rect x="484" y="50" width="105" height="60" rx="6" fill="#14181f" stroke="#ef4444"/>
+    <text x="494" y="70" fill="#ef4444" font-size="9">AT RISK</text>
+    <text x="494" y="92" fill="#f8fafc" font-size="16" font-weight="700">3 At Risk</text>
+
+    <rect x="597" y="50" width="110" height="60" rx="6" fill="#14181f" stroke="#333b4d"/>
+    <text x="607" y="70" fill="#94a3b8" font-size="9">COMPLETION</text>
+    <text x="607" y="92" fill="#f8fafc" font-size="16" font-weight="700">55% Avg</text>
+
+    <!-- Table -->
+    <rect x="145" y="125" width="562" height="255" rx="6" fill="#14181f"/>
+    <!-- Rows -->
+    <line x1="145" y1="160" x2="707" y2="160" stroke="#2b313e" stroke-width="1"/>
+    <line x1="145" y1="205" x2="707" y2="205" stroke="#2b313e" stroke-width="1"/>
+    <line x1="145" y1="250" x2="707" y2="250" stroke="#2b313e" stroke-width="1"/>
+    <line x1="145" y1="295" x2="707" y2="295" stroke="#2b313e" stroke-width="1"/>
+
+    <circle cx="165" cy="182" r="12" fill="#f59e0b"/>
+    <text x="185" y="186" fill="#f8fafc" font-size="11" font-weight="600">Mei Tanaka</text>
+    <rect x="360" y="177" width="90" height="8" rx="4" fill="#10b981"/>
+    <rect x="630" y="172" width="60" height="20" rx="10" fill="#10b981" opacity="0.2"/>
+    <text x="660" y="186" fill="#10b981" font-size="10" text-anchor="middle">Ahead</text>
+  </g>
+
+  <!-- Wireframe 5: Employee Profile Side Drawer -->
+  <g transform="translate(800, 560)">
+    <rect width="760" height="400" rx="10" fill="#0f1217" stroke="#2b313e" stroke-width="1.5"/>
+    <rect width="760" height="30" rx="10" fill="#181d26"/>
+    <circle cx="20" cy="15" r="5" fill="#ef4444"/>
+    <circle cx="36" cy="15" r="5" fill="#f59e0b"/>
+    <circle cx="52" cy="15" r="5" fill="#10b981"/>
+    <text x="380" y="20" fill="#64748b" font-size="11" text-anchor="middle">05. Employee Profile Side Drawer Wireframe</text>
+
+    <!-- Background Table blurred -->
+    <rect x="20" y="45" width="400" height="335" rx="6" fill="#14181f" opacity="0.3"/>
+
+    <!-- Drawer Panel -->
+    <rect x="430" y="40" width="320" height="350" rx="8" fill="#181d26" stroke="#f59e0b" stroke-width="1.5"/>
+    
+    <!-- Drawer Header -->
+    <circle cx="465" cy="80" r="20" fill="#f59e0b"/>
+    <text x="495" y="78" fill="#f8fafc" font-size="14" font-weight="700">Priya Anand</text>
+    <text x="495" y="93" fill="#94a3b8" font-size="10">Product Designer • London, UK</text>
+
+    <!-- Progress Bar -->
+    <rect x="450" y="115" width="280" height="24" rx="4" fill="#14181f"/>
+    <rect x="450" y="115" width="250" height="24" rx="4" fill="#f59e0b" opacity="0.8"/>
+    <text x="590" y="131" fill="#ffffff" font-size="10" font-weight="700" text-anchor="middle">11/12 Tasks (92%)</text>
+
+    <!-- Details Grid -->
+    <rect x="450" y="150" width="135" height="45" rx="6" fill="#14181f"/>
+    <rect x="595" y="150" width="135" height="45" rx="6" fill="#14181f"/>
+    
+    <rect x="450" y="205" width="135" height="45" rx="6" fill="#14181f"/>
+    <rect x="595" y="205" width="135" height="45" rx="6" fill="#14181f"/>
+
+    <!-- Meetings -->
+    <rect x="450" y="260" width="280" height="40" rx="6" fill="#14181f"/>
+    <rect x="450" y="310" width="280" height="40" rx="6" fill="#14181f"/>
+  </g>
+</svg>

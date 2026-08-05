@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HiveMind: Smart Onboarding - Wireframes & UI System Specification</title>
+  <style>
+    :root {
+      --bg-canvas: #090b0e;
+      --bg-surface: #0f1217;
+      --bg-sunk: #14181f;
+      --border-color: #2b313e;
+      --text-ink: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-honey: #f59e0b;
+      --accent-sage: #10b981;
+      --accent-pink: #f43f5e;
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--text-ink);
+      font-family: var(--font-sans);
+      line-height: 1.5;
+      padding: 32px;
+    }
+
+    .header {
+      max-width: 1400px;
+      margin: 0 auto 32px auto;
+      padding: 24px 32px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .header h1 {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--accent-honey);
+      letter-spacing: -0.5px;
+    }
+    .header p {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 20px;
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-honey);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+    }
+
+    .tab-btn {
+      background: var(--bg-surface);
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active, .tab-btn:hover {
+      background: var(--accent-honey);
+      color: #000;
+      border-color: var(--accent-honey);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .section-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-ink);
+    }
+    .section-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+      gap: 24px;
+    }
+
+    .wireframe-box {
+      background: var(--bg-sunk);
+      border: 1px dashed var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .wireframe-header {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent-honey);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .mock-img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    /* Lo-Fi CSS Mockups */
+    .lofi-frame {
+      background: #0d1117;
+      border: 2px stroke #30363d;
+      border-radius: 8px;
+      padding: 16px;
+      font-family: monospace;
+      color: #8b949e;
+      line-height: 1.6;
+    }
+    .lofi-box {
+      border: 1px dashed #484f58;
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 4px;
+    }
+    .lofi-title { color: #f0f6fc; font-weight: bold; }
+    .lofi-btn { background: #21262d; color: #58a6ff; padding: 4px 12px; border-radius: 4px; border: 1px solid #30363d; display: inline-block; margin-top: 8px; }
+
+    footer {
+      text-align: center;
+      padding: 32px 0;
+      color: var(--text-muted);
+      font-size: 13px;
+      border-top: 1px solid var(--border-color);
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div>
+      <h1>HIVEMIND: SMART ONBOARDING</h1>
+      <p>Low-Fidelity &amp; High-Fidelity Interactive Wireframe &amp; System UI Architecture Specification</p>
+    </div>
+    <div>
+      <span class="badge">Group 3 • Team SNUS</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('hifi')">High-Fidelity UI Screenshots</button>
+      <button class="tab-btn" onclick="switchTab('diagram')">SVG System Architecture Diagram</button>
+      <button class="tab-btn" onclick="switchTab('lofi')">Low-Fidelity Wireframes</button>
+    </div>
+
+    <!-- TAB 1: High Fidelity Screenshots -->
+    <div id="hifi" class="tab-content active">
+      
+      <div class="section-card">
+        <h2 class="section-title">01. Starter Onboarding Dashboard &amp; HR Roster</h2>
+        <p class="section-desc">Production-ready HR starters management system featuring Top KPIs, workforce breakdown stats, column sorting, and responsive employee cards.</p>
+        <img class="mock-img" src="screenshots/admin_starters_roster.png" alt="Admin Starters Roster &amp; KPIs">
+      </div>
+
+      <div class="grid-2">
+        <div class="section-card">
+          <h2 class="section-title">02. Detailed Employee Profile Side Drawer</h2>
+          <p class="section-desc">Interactive HR drawer displaying employee contact info, manager/buddy matching, task completion ratios (11/12 Tasks), documents, and timeline.</p>
+          <img class="mock-img" src="screenshots/employee_profile_drawer.png" alt="Employee Profile Drawer">
+        </div>
+
+        <div class="section-card">
+          <h2 class="section-title">03. Starter Personalized Roadmap Dashboard</h2>
+          <p class="section-desc">Personalized 30-day onboarding roadmap for new starters featuring live progress ring, task checklist, and transparent "Because..." reasoning microcopy.</p>
+          <img class="mock-img" src="screenshots/starter_dashboard.png" alt="Starter Dashboard">
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="section-card">
+          <h2 class="section-title">04. Landing Page &amp; Interactive Mascot</h2>
+          <p class="section-desc">Hero showcase with shader mesh canvas, brand honey color system, and Whobee assistant launcher.</p>
+          <img class="mock-img" src="screenshots/landing_page.png" alt="Landing Page Showcase">
+        </div>
+
+        <div class="section-card">
+          <h2 class="section-title">05. Role Personalisation Wizard</h2>
+          <p class="section-desc">Multi-step setup flow configuring the starter's role (Designer, Engineer, Marketer) and preferred learning modality.</p>
+          <img class="mock-img" src="screenshots/role_selection_wizard.png" alt="Role Selection Wizard">
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TAB 2: SVG Architecture Diagram -->
+    <div id="diagram" class="tab-content">
+      <div class="section-card">
+        <h2 class="section-title">System Structural Wireframe Diagram</h2>
+        <p class="section-desc">Comprehensive structural blueprint detailing screen relationships, component boundaries, and layout hierarchy.</p>
+        <img class="mock-img" src="wireframe-diagram.svg" alt="HiveMind Wireframe SVG Diagram">
+      </div>
+    </div>
+
+    <!-- TAB 3: Low Fidelity CSS Wireframes -->
+    <div id="lofi" class="tab-content">
+      <div class="grid-2">
+        
+        <div class="wireframe-box">
+          <div class="wireframe-header">
+            <span>LO-FI WIREFRAME: LANDING PAGE</span>
+            <span>SCREEN 01</span>
+          </div>
+          <div class="lofi-frame">
+            <div class="lofi-box">
+              <div class="lofi-title">[TOPBAR: LOGO | PROMISES | SIGN IN]</div>
+            </div>
+            <div class="lofi-box" style="height: 120px;">
+              <div class="lofi-title">[HERO SECTION: Title &amp; Subtitle]</div>
+              <p>Tailored 30-day onboarding roadmap for new hires.</p>
+              <div class="lofi-btn">[BUTTON: Start my first day →]</div>
+            </div>
+            <div class="lofi-box">
+              <div class="lofi-title">[3D WHOBEE ASSISTANT &amp; PROMISES GRID]</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="wireframe-box">
+          <div class="wireframe-header">
+            <span>LO-FI WIREFRAME: STARTER DASHBOARD</span>
+            <span>SCREEN 02</span>
+          </div>
+          <div class="lofi-frame">
+            <div class="lofi-box">
+              <div class="lofi-title">[PROGRESS RING CARD: 92% Complete]</div>
+              <p>11/12 Tasks Finished • Month 1 Phase</p>
+            </div>
+            <div class="lofi-box">
+              <div class="lofi-title">[ROADMAP CHECKLIST TASKS]</div>
+              <p>✓ Setup Figma workspace (Completed)</p>
+              <p>⏳ Review brand &amp; UI guidelines (In Progress)</p>
+              <div class="lofi-btn">[BUTTON: Mark complete]</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="wireframe-box">
+          <div class="wireframe-header">
+            <span>LO-FI WIREFRAME: ADMIN STARTERS ROSTER</span>
+            <span>SCREEN 03</span>
+          </div>
+          <div class="lofi-frame">
+            <div class="lofi-box">
+              <div class="lofi-title">[KPIS: Total: 7 | On Track: 3 | Ahead: 1 | At Risk: 3]</div>
+            </div>
+            <div class="lofi-box">
+              <div class="lofi-title">[DEPARTMENT STATS: Engineering (3) | Design (2) | Marketing (2)]</div>
+            </div>
+            <div class="lofi-box">
+              <div class="lofi-title">[STARTERS ROSTER TABLE with Sort Headers]</div>
+              <p>Row: Priya Anand | Product Designer | 92% Progress | [View Profile →]</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="wireframe-box">
+          <div class="wireframe-header">
+            <span>LO-FI WIREFRAME: EMPLOYEE PROFILE DRAWER</span>
+            <span>SCREEN 04</span>
+          </div>
+          <div class="lofi-frame">
+            <div class="lofi-box">
+              <div class="lofi-title">[HEADER: Avatar | Name | Title | Status Badge]</div>
+            </div>
+            <div class="lofi-box">
+              <div class="lofi-title">[TABS: Overview | Assigned Tasks | Documents | Activity]</div>
+              <p>Email: priya.anand@hivemind.co</p>
+              <p>Manager: Sarah Jenkins • Buddy: Sam Okonjo</p>
+              <p>Scheduled 1:1 Syncs &amp; Timeline History</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>© 2026 HiveMind Academy • Group 3 (Team SNUS) • University Project Usability Deliverables</p>
+  </footer>
+
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
+</body>
+</html>
