@@ -2,6 +2,23 @@
 
 Log what was done each week, who did it, and roughly how long it took.
 
+## Decisions log brought up to date, 2026-08-05
+
+The decisions log had not been touched since 29 July while a week of
+consequential choices landed, so it stopped a week short of the presentation.
+Added six entries covering the duplicate app removal, requiring a real JWT
+secret, validating persisted browser state, hash routing, building the
+onboarding assistant as a local engine rather than an LLM, and moving to
+branches and pull requests for shared files. Each entry records the evidence
+and the alternative that was considered, and each was checked against the
+actual commit history rather than written from memory.
+
+Also audited and fixed the client state, auth, and storage layer earlier in the
+day (branch `fix/client-state-robustness`, since merged): two crashes that took
+the whole app down were reproduced in the browser, fixed, and confirmed fixed.
+
+Bushra Rimi (Documentation Lead), with Claude, about 2 hours across both pieces.
+
 ## Validation and testing prep, 2026-08-04
 
 Ahead of the Week 4 presentation, following the instructor's reminder to
