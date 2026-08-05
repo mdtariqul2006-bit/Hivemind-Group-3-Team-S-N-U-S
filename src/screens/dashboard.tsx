@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, PartyPopper, Sparkle } from 'lucide-react';
 import { useOnboarding } from '@/state/onboarding-context';
+import { useMember, firstNameFor } from '@/state/member-context';
 import { NEW_HIRE, PHASES, ROLES } from '@/data/roles';
 import type { Task } from '@/types';
 import { ProgressHive } from '@/components/ui/progress-hive';
@@ -25,6 +26,10 @@ let hasShownSkeleton = false;
 
 export function Dashboard() {
   const { state, dispatch, tasks, progress } = useOnboarding();
+  const { user } = useMember();
+  // Greet the signed in member by their own name. NEW_HIRE stays the fallback
+  // for the signed out demo path, where there is no account to read a name from.
+  const greetingName = user ? firstNameFor(user) || NEW_HIRE : NEW_HIRE;
   const reduce = useReducedMotion();
 
   // A brief seeded "load" so the skeleton state is real and reviewers see it
@@ -71,7 +76,7 @@ export function Dashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: EASE_OUT, delay: 0.15 }}
         >
-          {settledLine(progress, NEW_HIRE)}
+          {settledLine(progress, greetingName)}
         </motion.p>
         <div className="mt-3 flex items-center gap-2">
           <Badge tone="sage">{roleLabel} path</Badge>

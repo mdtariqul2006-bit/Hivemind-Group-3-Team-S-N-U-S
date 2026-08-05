@@ -1,12 +1,14 @@
+import { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { FileText, LogOut, Users } from 'lucide-react';
-import { NEW_HIRE } from '@/data/roles';
+import { FileText, Users } from 'lucide-react';
 import { useOnboarding } from '@/state/onboarding-context';
 import { useMember } from '@/state/member-context';
 import type { View } from '@/types';
-import { Avatar } from '@/components/ui/avatar';
 import { Wordmark } from '@/components/ui/logo';
 import { ThemeToggle } from './theme-toggle';
+import { ProfileMenu } from './profile-menu';
+import { ProfileModal } from './profile-modal';
+import { SettingsModal } from './settings-modal';
 import { cn } from '@/lib/cn';
 
 // Starter facing navigation only. The admin console is reached through the
@@ -27,6 +29,8 @@ export function TopBar({ title }: { title?: string }) {
   const reduce = useReducedMotion();
   const { state, dispatch } = useOnboarding();
   const { user, signOut } = useMember();
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   function handleSignOut() {
     signOut();
@@ -83,21 +87,34 @@ export function TopBar({ title }: { title?: string }) {
             ))}
           </nav>
           <ThemeToggle />
-          {user && (
+          {/* Signing out lives inside this menu now, rather than as its own
+              button beside a decorative avatar that did nothing when clicked.
+              The dashboard is reachable without an account, through the
+              personalise wizard, so signed out visitors get a way in rather
+              than an empty space where the avatar would be. */}
+          {user ? (
+            <ProfileMenu
+              onOpenProfile={() => setProfileOpen(true)}
+              onOpenSettings={() => setSettingsOpen(true)}
+              onSignOut={handleSignOut}
+            />
+          ) : (
             <button
-              onClick={handleSignOut}
-              className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-sunk hover:text-ink"
-              aria-label="Sign out"
-              title={`Signed in as ${user.email}`}
+              onClick={() => dispatch({ type: 'go', view: 'auth' })}
+              className="inline-flex items-center gap-1.5 rounded-full border border-border px-3.5 py-2 text-sm font-medium text-ink transition-colors hover:bg-sunk"
             >
-              <LogOut className="h-4 w-4" />
-              <span className="hidden lg:inline">Sign out</span>
+              Sign in
             </button>
           )}
-          <Avatar initials="AL" accent="honey" size={38} presence="online" />
-          <span className="sr-only">{NEW_HIRE}</span>
         </div>
       </div>
+
+      {user && (
+        <>
+          <ProfileModal open={profileOpen} onClose={() => setProfileOpen(false)} />
+          <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+        </>
+      )}
     </motion.header>
   );
 }

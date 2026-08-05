@@ -9,7 +9,14 @@ import { safeGetItem, safeRemoveItem, safeSetItem } from '@/lib/storage';
 
 export interface MemberUser {
   email: string;
+  /** Display name, optional: an account is usable before one is set. */
+  name?: string;
+  /** Square avatar as a data URL, already shrunk by lib/avatar-image.ts. */
+  avatarUrl?: string;
 }
+
+/** The fields a member can change about themselves. */
+export type ProfilePatch = Partial<Pick<MemberUser, 'name' | 'avatarUrl'>>;
 
 interface StoredAccount {
   email: string;
@@ -52,11 +59,41 @@ function loadUser(): MemberUser | null {
     if (!raw) return null;
     const parsed: unknown = JSON.parse(raw);
     if (typeof parsed !== 'object' || parsed === null) return null;
-    const { email } = parsed as Record<string, unknown>;
-    return typeof email === 'string' && email ? { email } : null;
+    const { email, name, avatarUrl } = parsed as Record<string, unknown>;
+    if (typeof email !== 'string' || !email) return null;
+    // name and avatarUrl are validated separately rather than spread in: a
+    // stale or hand edited record with the wrong types would otherwise reach
+    // the <img> src and the initials fallback as non-strings.
+    return {
+      email,
+      ...(typeof name === 'string' && name ? { name } : {}),
+      ...(typeof avatarUrl === 'string' && avatarUrl.startsWith('data:image/')
+        ? { avatarUrl }
+        : {}),
+    };
   } catch {
     return null;
   }
+}
+
+/**
+ * First name for greetings. Falls back to the email's local part, so a member
+ * who never set a display name is still greeted as somebody rather than as the
+ * demo persona.
+ */
+export function firstNameFor(user: MemberUser): string {
+  const source = user.name?.trim() || user.email.split('@')[0] || '';
+  const first = source.split(/[\s._-]+/).filter(Boolean)[0] ?? '';
+  return first ? first.charAt(0).toUpperCase() + first.slice(1) : '';
+}
+
+/** Initials for the avatar fallback, from the display name or the email. */
+export function initialsFor(user: MemberUser): string {
+  const source = user.name?.trim() || user.email.split('@')[0] || '';
+  const words = source.split(/[\s._-]+/).filter(Boolean);
+  if (words.length === 0) return '?';
+  if (words.length === 1) return words[0]!.slice(0, 2).toUpperCase();
+  return (words[0]![0]! + words[1]![0]!).toUpperCase();
 }
 
 interface MemberContextValue {
@@ -64,6 +101,7 @@ interface MemberContextValue {
   signIn: (email: string, password: string) => AuthResult;
   signUp: (email: string, password: string) => AuthResult;
   signOut: () => void;
+  updateProfile: (patch: ProfilePatch) => AuthResult;
 }
 
 const MemberContext = createContext<MemberContextValue | null>(null);
@@ -124,8 +162,41 @@ export function MemberProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }
 
+  /**
+   * Writes before it commits to state, rather than the other way round.
+   *
+   * An avatar is by far the largest thing this app stores, so a write here can
+   * genuinely fail on a full quota. The persistence effect below cannot report
+   * that, it would just drop the image and leave the UI claiming it saved. So
+   * the write is attempted first and state only moves if it succeeded, which
+   * means what is on screen always matches what survives a refresh.
+   */
+  function updateProfile(patch: ProfilePatch): AuthResult {
+    if (!user) return { ok: false, error: 'You need to be signed in to do that.' };
+
+    const next: MemberUser = { ...user };
+    if ('name' in patch) {
+      const trimmed = patch.name?.trim();
+      if (trimmed) next.name = trimmed;
+      else delete next.name;
+    }
+    if ('avatarUrl' in patch) {
+      if (patch.avatarUrl) next.avatarUrl = patch.avatarUrl;
+      else delete next.avatarUrl;
+    }
+
+    if (!safeSetItem(USER_KEY, JSON.stringify(next))) {
+      return {
+        ok: false,
+        error: 'Could not save that. Your browser storage may be full, try a smaller image.',
+      };
+    }
+    setUser(next);
+    return { ok: true };
+  }
+
   return (
-    <MemberContext.Provider value={{ user, signIn, signUp, signOut }}>
+    <MemberContext.Provider value={{ user, signIn, signUp, signOut, updateProfile }}>
       {children}
     </MemberContext.Provider>
   );

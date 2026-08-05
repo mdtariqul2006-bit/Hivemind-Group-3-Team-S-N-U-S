@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { HexFrame } from './hex-frame';
 import { cn } from '@/lib/cn';
 
@@ -12,27 +13,49 @@ const presenceColor: Record<Presence, string> = {
 /** An avatar in a hex frame, with an optional presence dot. */
 export function Avatar({
   initials,
+  src,
   size = 48,
   accent = 'sage',
   presence,
   className,
 }: {
   initials: string;
+  /** Uploaded photo. Falls back to initials when absent or broken. */
+  src?: string;
   size?: number;
   accent?: 'honey' | 'pink' | 'sage';
   presence?: Presence;
   className?: string;
 }) {
+  const [imageFailed, setImageFailed] = useState(false);
+  // A src that changes should get another chance, the previous failure was
+  // about the old image, not this one.
+  useEffect(() => setImageFailed(false), [src]);
+
+  const showImage = Boolean(src) && !imageFailed;
+
   return (
     <span className={cn('relative inline-block', className)} style={{ width: size, height: size }}>
       <HexFrame size={size} accent={accent}>
-        <span
-          className="font-semibold text-charcoal"
-          style={{ fontSize: size * 0.34 }}
-          aria-hidden
-        >
-          {initials}
-        </span>
+        {showImage ? (
+          <img
+            src={src}
+            alt=""
+            width={size}
+            height={size}
+            onError={() => setImageFailed(true)}
+            className="h-full w-full object-cover"
+            draggable={false}
+          />
+        ) : (
+          <span
+            className="font-semibold text-charcoal"
+            style={{ fontSize: size * 0.34 }}
+            aria-hidden
+          >
+            {initials}
+          </span>
+        )}
       </HexFrame>
       {presence && (
         <span

@@ -6,8 +6,18 @@ function currentTheme(): Theme {
   return document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
 }
 
-/** Reads and toggles the data-theme attribute set before first paint in index.html. */
-export function useTheme(): { theme: Theme; toggle: () => void } {
+/**
+ * Reads and sets the data-theme attribute set before first paint in index.html.
+ *
+ * `toggle` is what the top bar's two-state switch uses. `setTheme` is for
+ * places that offer the themes as explicit choices, such as the settings
+ * dialog, where toggling blind would be the wrong interaction.
+ */
+export function useTheme(): {
+  theme: Theme;
+  toggle: () => void;
+  setTheme: (theme: Theme) => void;
+} {
   const [theme, setTheme] = useState<Theme>(currentTheme);
 
   useEffect(() => {
@@ -21,5 +31,5 @@ export function useTheme(): { theme: Theme; toggle: () => void } {
     setTheme((t) => (t === 'dark' ? 'light' : 'dark'));
   }, []);
 
-  return { theme, toggle };
+  return { theme, toggle, setTheme };
 }

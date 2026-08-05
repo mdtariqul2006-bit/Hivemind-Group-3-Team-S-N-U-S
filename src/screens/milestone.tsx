@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Share2 } from 'lucide-react';
 import { useOnboarding } from '@/state/onboarding-context';
 import { useToast } from '@/state/toast-context';
+import { useMember, firstNameFor } from '@/state/member-context';
 import { NEW_HIRE, PHASE_BY_ID, ROLES } from '@/data/roles';
 import type { PhaseId } from '@/types';
 import { Modal } from '@/components/ui/modal';
@@ -21,6 +22,10 @@ export function Milestone({ phaseId }: { phaseId: PhaseId }) {
   const reduce = useReducedMotion();
   const { state, dispatch, progress, tasks } = useOnboarding();
   const { push } = useToast();
+  const { user } = useMember();
+  // Matches the dashboard greeting: the member's own name when signed in,
+  // NEW_HIRE for the signed out demo path.
+  const greetingName = user ? firstNameFor(user) || NEW_HIRE : NEW_HIRE;
   const [rating, setRating] = useState(0);
 
   const phase = PHASE_BY_ID[phaseId];
@@ -96,7 +101,7 @@ export function Milestone({ phaseId }: { phaseId: PhaseId }) {
 
         {/* How did it feel? */}
         <div className="mt-6 flex flex-col items-center gap-2">
-          <p className="text-sm text-muted">How did {phase.label.toLowerCase()} feel, {NEW_HIRE}?</p>
+          <p className="text-sm text-muted">How did {phase.label.toLowerCase()} feel, {greetingName}?</p>
           <Rating value={rating} onChange={rate} label={`Rate ${phase.label}`} />
         </div>
 
