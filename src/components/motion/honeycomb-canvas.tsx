@@ -271,7 +271,9 @@ export function HoneycombCanvas() {
           }
 
           for (const ripple of ripples) {
-            const age = time - ripple.born;
+            // Clamped at zero: see the ripple rendering loop below for why a
+            // ripple can briefly report a negative age.
+            const age = Math.max(0, time - ripple.born);
             if (age > 900) continue;
             const dx = bee.x - ripple.x;
             const dy = bee.y - ripple.y;
@@ -312,7 +314,15 @@ export function HoneycombCanvas() {
         // Click ripple rendering, fades over ~900ms.
         for (let i = ripples.length - 1; i >= 0; i--) {
           const r = ripples[i]!;
-          const age = time - r.born;
+          // `time` is the frame's start timestamp, while `born` is stamped in
+          // the click handler, so a click landing mid frame is stamped after
+          // the frame began and the age comes out slightly negative. That fed
+          // a negative radius to arc(), which throws IndexSizeError, and since
+          // the throw escapes before the requestAnimationFrame call at the end
+          // of step() it killed the whole animation loop for the rest of the
+          // session, not just that one frame. Clamping keeps the ripple at
+          // radius zero for the frame it was born in.
+          const age = Math.max(0, time - r.born);
           if (age > 900) {
             ripples.splice(i, 1);
             continue;
