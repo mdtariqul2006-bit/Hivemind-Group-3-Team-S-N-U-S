@@ -24,8 +24,34 @@ export function Section() {
       <div className="relative h-[480px] w-full bg-sunk/40" style={{ transform: 'translateZ(0)', contain: 'content' }}>
         <InteractiveRobotSpline
           scene={ROBOT_SCENE_URL}
-          className="w-full h-full" 
+          className="w-full h-full"
         />
+
+        {/*
+          Corner treatment replacing the Spline runtime's attribution badge.
+
+          The badge is painted into the WebGL canvas itself rather than added to
+          the DOM (verified: the scene container is `div > div > canvas` with no
+          anchor or logo node anywhere in the document once the scene has loaded),
+          so its text cannot be edited or hidden with a selector. The gradient
+          below covers that corner and our own label sits on top. Both are
+          `pointer-events-none` so the scene stays fully draggable underneath.
+        */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute bottom-0 right-0 h-28 w-72 rounded-br-3xl"
+          style={{
+            background:
+              'radial-gradient(130% 130% at 100% 100%, var(--hm-surface-sunk) 45%, color-mix(in oklab, var(--hm-surface-sunk) 70%, transparent) 65%, transparent 85%)',
+          }}
+        />
+
+        <div className="pointer-events-none absolute bottom-5 right-5 inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-surface/70 px-3 py-1 backdrop-blur-md">
+          <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-honey" />
+          <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-honey-deep">
+            Whobee
+          </span>
+        </div>
       </div>
     </div> 
   );

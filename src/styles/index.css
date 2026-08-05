@@ -227,3 +227,19 @@
   }
 }
 
+
+/* ---------------------------------------------------------------------------
+   Spline attribution badge.
+
+   The Spline runtime appends its own "Built with Spline" link into the scene
+   container after the scene loads. It is injected at runtime, so it cannot be
+   removed from our JSX, only hidden from CSS. The selectors below cover the
+   shapes that runtime has used: an anchor back to spline.design, and a bare
+   `#logo` node, scoped to our own wrapper so nothing else on the page is caught.
+   --------------------------------------------------------------------------- */
+[data-spline-scene] a[href*='spline.design'],
+[data-spline-scene] a[href*='spline.run'],
+[data-spline-scene] #logo,
+[data-spline-scene] [class*='spline-watermark'] {
+  display: none !important;
+}

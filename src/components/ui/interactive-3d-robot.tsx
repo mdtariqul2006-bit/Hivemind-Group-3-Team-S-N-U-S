@@ -22,7 +22,13 @@ export function InteractiveRobotSpline({ scene, className }: InteractiveRobotSpl
         </div>
       }
     >
-      <Spline scene={scene} className={className} />
+      {/* The Spline runtime injects its own "Built with Spline" attribution link
+          into the scene container at load time, it is not part of this component's
+          markup. `data-spline-scene` gives that injected node a stable ancestor to
+          target from CSS, see the rule in src/styles/index.css. */}
+      <div data-spline-scene className="h-full w-full">
+        <Spline scene={scene} className={className} />
+      </div>
     </Suspense>
   );
 }
