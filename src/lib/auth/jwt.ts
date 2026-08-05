@@ -15,9 +15,13 @@ import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
  * route. Do not treat this as protecting anything real. A production version
  * moves signing behind a server that keeps the secret private.
  *
- * There is no hardcoded fallback secret, VITE_JWT_SECRET must be set (see
- * .env.example). This throws if it is missing, callers must catch it,
- * see login() in state/auth-context.tsx for the pattern.
+ * VITE_JWT_SECRET overrides the fallback below (see .env.example), which is
+ * worth setting so a deployed build is not signing with a value that is
+ * published in this repository. The fallback exists so a fresh clone can sign
+ * in to the admin console without setting anything up first, and it costs
+ * nothing extra in security terms: whatever the secret is, it is inlined into
+ * the browser bundle at build time and readable by anyone. The boundary this
+ * does not cross is the same either way, see above.
  */
 
 function getSecretKey(): Uint8Array {
