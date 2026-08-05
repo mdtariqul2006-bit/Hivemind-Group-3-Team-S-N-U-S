@@ -71,8 +71,13 @@ export function Landing() {
         <RobotSection />
       </div>
 
-      {/* Promises section featuring clean high-contrast container (flicker-free) */}
-      <section className="relative overflow-hidden border-t border-border/80 bg-sunk/30 py-20">
+      {/* Promises section featuring clean high-contrast container (flicker-free).
+          Solid `bg-canvas`, not a translucent tint: every band on this page is
+          fully opaque and alternates canvas/sunk down the page (MissionBand is
+          sunk, Pillars canvas, and so on). A 30% tint here was the one section the
+          honeycomb bled through, which read as a patch of a different colour
+          rather than part of the rhythm. */}
+      <section className="relative overflow-hidden border-t border-border/80 bg-canvas py-20">
         <div className="relative z-10 mx-auto w-full max-w-6xl px-5">
           <Reveal className="mb-12 text-center">
             <span className="inline-flex items-center gap-2 rounded-full border border-honey/40 bg-honey-wash/90 px-4 py-1 text-xs font-bold uppercase tracking-wider text-honey-deep shadow-sm">
@@ -129,6 +134,7 @@ export function Landing() {
                   </p>
                 </div>
                 <Button
+                  magnetic
                   onClick={() => dispatch({ type: 'go', view: 'personalise' })}
                   iconRight={<span className="ml-1">→</span>}
                 >

@@ -21,15 +21,30 @@ export default function ShaderShowcase({ onLogoClick, onStartClick, onDashboardC
   const { user: member } = useMember()
   const reduce = useReducedMotion()
 
-  // HiveMind brand color palette adjusted for light/dark themes
+  /**
+   * Mesh palettes are built from the theme's OWN canvas/surface/border tokens,
+   * with the pre-muted `honey-wash` as the single warm accent.
+   *
+   * Two earlier bugs lived here. The second layer mixed raw #000000 with full
+   * honey and pink, and the first layer's "dark" tones (#22252A to #383C42) were
+   * all far lighter than the real dark canvas (#090b0e). Because these shaders
+   * animate on a slow loop, the combination drifted into a muddy peach-black
+   * wash that sat visibly lighter and warmer than every other section. Sourcing
+   * the neutrals from the actual tokens keeps the hero in the same surface
+   * family as the rest of the page no matter where the loop is.
+   */
   const meshColors = theme === "dark"
-    ? ["#22252A", "#2C3037", "#383C42", "#FFC370", "#F4B8BD"]
-    : ["#FBFAF7", "#ECE9E3", "#BAC9C5", "#FFC370", "#F4B8BD"]
+    ? ["#090B0E", "#0F1217", "#14181F", "#272E38", "#2E2210"]
+    : ["#FBFAF7", "#F5F3EE", "#ECE9E3", "#FFF0DB", "#FCEDEF"]
+
+  const meshColorsSecondary = theme === "dark"
+    ? ["#090B0E", "#0F1217", "#14181F", "#2E2210"]
+    : ["#FBFAF7", "#F5F3EE", "#ECE9E3", "#FFF0DB"]
 
   const borderColors = ["#FFC370", "#F4B8BD", "#BAC9C5", "#383C42", "#FFFFFF"]
 
   return (
-    <div ref={containerRef} className="relative min-h-[90vh] overflow-hidden rounded-[2rem] border border-border bg-canvas/30 shadow-[var(--shadow-soft)]">
+    <div ref={containerRef} className="relative min-h-[90vh] overflow-hidden rounded-[2rem] border border-border bg-canvas shadow-[var(--shadow-soft)]">
       {/* SVG filter for the gooey button effect, the only one of this block actually used */}
       <svg className="absolute inset-0 w-0 h-0">
         <defs>
@@ -55,8 +70,8 @@ export default function ShaderShowcase({ onLogoClick, onStartClick, onDashboardC
             speed={0.08}
           />
           <MeshGradient
-            className="absolute inset-0 w-full h-full opacity-15"
-            colors={["#000000", "#FFC370", "#F4B8BD", "#BAC9C5"]}
+            className="absolute inset-0 w-full h-full opacity-10"
+            colors={meshColorsSecondary}
             speed={0.05}
           />
         </div>

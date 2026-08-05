@@ -1,6 +1,7 @@
-import { forwardRef, type ReactNode } from 'react';
+import { forwardRef, useRef, type ReactNode } from 'react';
 import { motion, useReducedMotion, type HTMLMotionProps } from 'framer-motion';
 import { springPop } from '@/lib/motion';
+import { useMagnetic } from '@/hooks/use-magnetic';
 import { cn } from '@/lib/cn';
 
 type Variant = 'primary' | 'secondary' | 'ghost';
@@ -14,6 +15,8 @@ interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'children'> {
   children: ReactNode;
   iconLeft?: ReactNode;
   iconRight?: ReactNode;
+  /** Opt-in GSAP magnetic pull toward the cursor. Off by default. */
+  magnetic?: boolean;
 }
 
 const base =
@@ -35,14 +38,21 @@ const sizes: Record<Size, string> = {
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { variant = 'primary', size = 'md', className, children, iconLeft, iconRight, ...rest },
+  { variant = 'primary', size = 'md', className, children, iconLeft, iconRight, magnetic, ...rest },
   ref,
 ) {
   const reduce = useReducedMotion();
+  const innerRef = useRef<HTMLButtonElement>(null);
+  useMagnetic(innerRef, 10, magnetic);
+
   return (
     <motion.button
-      ref={ref}
-      className={cn(base, variants[variant], sizes[size], className)}
+      ref={(node) => {
+        innerRef.current = node;
+        if (typeof ref === 'function') ref(node);
+        else if (ref) ref.current = node;
+      }}
+      className={cn(base, variants[variant], sizes[size], magnetic && 'will-change-transform', className)}
       whileTap={reduce ? undefined : { scale: 0.97 }}
       transition={springPop}
       {...rest}

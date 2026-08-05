@@ -3,7 +3,7 @@ import { useOnboarding } from '@/state/onboarding-context';
 import { useAuth } from '@/state/auth-context';
 import { useSmoothScroll } from '@/hooks/use-smooth-scroll';
 import { useHistorySync } from '@/hooks/use-history-sync';
-import { AnimatedBackground } from '@/components/motion/animated-background';
+import { HoneycombCanvas } from '@/components/motion/honeycomb-canvas';
 import { TopBar } from '@/components/layout/top-bar';
 import { Landing } from '@/screens/landing';
 import { Auth } from '@/screens/auth';
@@ -43,7 +43,7 @@ export function App() {
 
   return (
     <div className="relative min-h-[100dvh]">
-      <AnimatedBackground />
+      <HoneycombCanvas />
 
       {/* Skip link, keyboard users land straight on the content. */}
       <a
