@@ -1,24 +1,14 @@
 import { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { FileText, Users } from 'lucide-react';
 import { useOnboarding } from '@/state/onboarding-context';
 import { useMember } from '@/state/member-context';
-import type { View } from '@/types';
 import { Wordmark } from '@/components/ui/logo';
 import { ThemeToggle } from './theme-toggle';
 import { ProfileMenu } from './profile-menu';
 import { ProfileModal } from './profile-modal';
 import { SettingsModal } from './settings-modal';
+import { WORKSPACE_NAV } from './workspace-nav';
 import { cn } from '@/lib/cn';
-
-// Starter facing navigation only. The admin console is reached through the
-// Login button on the landing page, so new starters are never shown a tab that
-// leads to a sign in wall they cannot pass.
-const NAV: { view: View; label: string; icon: typeof Users }[] = [
-  { view: 'dashboard', label: 'Dashboard', icon: Users },
-  { view: 'people', label: 'People', icon: Users },
-  { view: 'documents', label: 'Documents', icon: FileText },
-];
 
 /**
  * Persistent frosted top bar: logo mark, contextual page title, theme toggle and
@@ -71,8 +61,9 @@ export function TopBar({ title }: { title?: string }) {
         </div>
 
         <div className="flex shrink-0 items-center gap-1.5">
-          <nav className="mr-1.5 hidden items-center gap-1 sm:flex" aria-label="Quick links">
-            {NAV.map((n) => (
+          {/* Hidden below sm, where the fixed WorkspaceTabBar takes over. */}
+          <nav className="mr-1.5 hidden items-center gap-1 sm:flex" aria-label="Workspace">
+            {WORKSPACE_NAV.map((n) => (
               <button
                 key={n.view}
                 onClick={() => dispatch({ type: 'go', view: n.view })}

@@ -97,7 +97,14 @@ export function Dashboard() {
 
       {/* The plan + people */}
       <div className="mt-12 grid gap-8 lg:grid-cols-[1fr_320px]">
-        <div className="flex flex-col gap-10">
+        {/* min-w-0 is load bearing. A grid item defaults to min-width:auto, so
+            it refuses to shrink below its content's min-content width. The task
+            carousel below holds w-[80vw] shrink-0 cards, so that min-content is
+            the full row of them, which stretched this column to about 970px
+            inside a 375px phone and made the whole dashboard scroll sideways.
+            Allowing the column to shrink is what lets overflow-x-auto on the
+            carousel actually do its job. */}
+        <div className="flex min-w-0 flex-col gap-10">
           {PHASES.map((phase) => {
             const phaseTasks = tasks.filter((t) => t.phase === phase.id);
             const phaseDone = phaseTasks.filter((t) =>

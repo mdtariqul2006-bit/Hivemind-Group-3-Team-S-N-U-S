@@ -5,6 +5,7 @@ import { useSmoothScroll } from '@/hooks/use-smooth-scroll';
 import { useHistorySync } from '@/hooks/use-history-sync';
 import { HoneycombCanvas } from '@/components/motion/honeycomb-canvas';
 import { TopBar } from '@/components/layout/top-bar';
+import { WorkspaceTabBar } from '@/components/layout/workspace-nav';
 import { Landing } from '@/screens/landing';
 import { Auth } from '@/screens/auth';
 import { Personalise } from '@/screens/personalise';
@@ -18,6 +19,7 @@ import { AdminLogin } from '@/screens/admin-login';
 import { ToastStack } from '@/components/ui/toast-stack';
 import { AssistantLauncher } from '@/components/assistant/assistant-launcher';
 import { EASE_OUT } from '@/lib/motion';
+import { cn } from '@/lib/cn';
 
 const TITLES: Record<string, string> = {
   dashboard: 'Your first 30 days',
@@ -42,7 +44,12 @@ export function App() {
     state.view === 'dashboard' || state.view === 'people' || state.view === 'documents';
 
   return (
-    <div className="relative min-h-[100dvh]">
+    // overflow-x-clip, not hidden: decorative glows and blur blobs are placed
+    // deliberately outside their cards and must not drag the whole document
+    // into sideways scrolling on a phone. `clip` does this without creating a
+    // scroll container or a containing block, so position:fixed children like
+    // the workspace tab bar and Whobee still anchor to the viewport.
+    <div className="relative min-h-[100dvh] overflow-x-clip">
       <HoneycombCanvas />
 
       {/* Skip link, keyboard users land straight on the content. */}
@@ -55,7 +62,10 @@ export function App() {
 
       {showTopBar && <TopBar title={TITLES[state.view]} />}
 
-      <main id="main">
+      {/* The tab bar is fixed over the content, so the workspace screens need
+          room underneath them or the last card sits behind it. Only on the
+          screens that actually show it, and only below sm where it exists. */}
+      <main id="main" className={cn(showTopBar && 'pb-[4.5rem] sm:pb-0')}>
         <AnimatePresence mode="wait">
           <motion.div
             key={state.view}
@@ -93,9 +103,16 @@ export function App() {
         {state.pendingCelebration && <Milestone key="milestone" phaseId={state.pendingCelebration} />}
       </AnimatePresence>
 
+      {/* Only on the workspace screens, which are the ones the tab bar's
+          destinations point at. The landing page and the wizard have their own
+          full-screen flow and no business showing tabs. */}
+      {showTopBar && <WorkspaceTabBar />}
+
       {/* Not shown on the admin console, that surface has its own audience and
-          chrome, see docs/onboarding-assistant-spec.md section 4. */}
-      {state.view !== 'admin' && <AssistantLauncher />}
+          chrome, see docs/onboarding-assistant-spec.md section 4. Lifted clear
+          of the tab bar on the screens that show one, otherwise Whobee sits on
+          top of the Resources tab and blocks it. */}
+      {state.view !== 'admin' && <AssistantLauncher liftedForTabBar={showTopBar} />}
 
       <ToastStack />
     </div>

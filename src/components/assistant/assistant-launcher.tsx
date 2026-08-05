@@ -4,6 +4,7 @@ import { useAssistant } from '@/state/assistant-context';
 import { AssistantPanel } from '@/components/assistant/assistant-panel';
 import { Whobee } from '@/components/assistant/whobee';
 import { EASE_OUT, springPop } from '@/lib/motion';
+import { cn } from '@/lib/cn';
 
 const PANEL_TITLE_ID = 'assistant-panel-title';
 
@@ -43,7 +44,15 @@ function HexBurst() {
  * mid-session user or someone who never saw the landing page, skips straight to
  * the docked bee rather than replaying it on every route change.
  */
-export function AssistantLauncher() {
+export function AssistantLauncher({
+  /**
+   * Raise the bubble above the mobile workspace tab bar. Without it Whobee
+   * sits directly on top of the right-most tab and swallows taps meant for it.
+   */
+  liftedForTabBar = false,
+}: {
+  liftedForTabBar?: boolean;
+} = {}) {
   const { hasEntered, isOpen, toggle } = useAssistant();
   const reduce = useReducedMotion();
   const wasAlreadyEnteredOnMount = useRef(hasEntered);
@@ -55,7 +64,12 @@ export function AssistantLauncher() {
   return (
     <>
       <AssistantPanel labelledBy={PANEL_TITLE_ID} />
-      <div className="fixed bottom-4 right-4 z-40 sm:bottom-6 sm:right-6">
+      <div
+        className={cn(
+          'fixed right-4 z-40 sm:bottom-6 sm:right-6',
+          liftedForTabBar ? 'bottom-[5.25rem] sm:bottom-6' : 'bottom-4',
+        )}
+      >
         <motion.button
           onClick={toggle}
           aria-haspopup="dialog"

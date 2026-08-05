@@ -83,13 +83,6 @@ function sameRoute(a: Route, b: Route): boolean {
 export function useHistorySync(): void {
   const { state, dispatch } = useOnboarding();
 
-  /**
-   * The route we are currently applying from the URL, held until the reducer
-   * has caught up. Dispatching does not update `state` until the next render,
-   * so without this the write effect below would run with the previous view and
-   * overwrite the very URL it is meant to be honouring.
-   */
-  const pendingFromUrl = useRef<Route | null>(null);
   /** The first write normalises the address bar, it is not a navigation. */
   const firstWrite = useRef(true);
 
@@ -98,7 +91,6 @@ export function useHistorySync(): void {
   useEffect(() => {
     function applyRoute() {
       const route = parseHash(window.location.hash);
-      pendingFromUrl.current = route;
       dispatch({ type: 'go', view: route.view });
       dispatch({ type: 'set-admin-section', section: route.section ?? 'overview' });
       if (route.taskId) dispatch({ type: 'open-task', id: route.taskId });
@@ -113,7 +105,24 @@ export function useHistorySync(): void {
     };
   }, [dispatch]);
 
-  // Write the URL when the app itself navigates.
+  /**
+   * Write the URL when the app itself navigates.
+   *
+   * This compares against the address bar rather than holding a "we are
+   * applying a route from the URL" flag. That flag was a trap: applying a route
+   * for the view the app is already on dispatches a no-op, so none of this
+   * effect's dependencies change, the effect never runs, and the flag is never
+   * cleared. From then on every real navigation hit the guard and returned
+   * without writing, so the view changed while the URL sat frozen on whatever
+   * it was. Landing on #/dashboard and then clicking People was enough to
+   * reproduce it.
+   *
+   * Comparing to the URL needs no flag. This effect only runs after the state
+   * it reads has already updated, so on back or forward the state has caught up
+   * by the time it runs, the built hash matches the bar, and nothing is
+   * written, which is exactly the no-duplicate-history-entry behaviour the flag
+   * was there to protect.
+   */
   useEffect(() => {
     const current: Route = {
       view: state.view,
@@ -121,25 +130,20 @@ export function useHistorySync(): void {
       section: state.view === 'admin' ? state.adminSection : null,
     };
     const currentHash = window.location.hash || '#/';
-    const pending = pendingFromUrl.current;
+    const next = buildHash(current);
 
-    if (pending) {
-      // Still catching up to a URL driven change, so do not write anything yet.
-      const target: Route = { ...pending, section: pending.section ?? 'overview' };
-      if (!sameRoute(pending.view === 'admin' ? target : pending, current)) return;
-      pendingFromUrl.current = null;
-      // Tidy the bar without adding an entry, for example "#" becoming "#/".
-      const normalised = buildHash(pending);
-      if (normalised !== currentHash) window.history.replaceState(null, '', normalised);
+    // Already correct: either the app just followed the URL, or nothing moved.
+    if (sameRoute(parseHash(currentHash), current) && next === currentHash) {
+      firstWrite.current = false;
       return;
     }
-
-    const next = buildHash(current);
     if (next === currentHash) {
       firstWrite.current = false;
       return;
     }
     if (firstWrite.current) {
+      // Tidy the bar on first paint, for example "#" becoming "#/", without
+      // adding an entry the user would have to press back through.
       firstWrite.current = false;
       window.history.replaceState(null, '', next);
       return;
